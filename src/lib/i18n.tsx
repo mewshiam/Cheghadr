@@ -407,13 +407,13 @@ export function I18nProvider({
   locale: Locale;
   children: React.ReactNode;
 }) {
-  const dir = locale === "fa" ? "rtl" : "ltr";
+  const dir: "rtl" | "ltr" = locale === "fa" ? "rtl" : "ltr";
   const t = useCallback(
     (key: StringKey, vars?: Record<string, string | number>) =>
       translate(locale, key, vars),
     [locale],
   );
-  const value = useMemo(() => ({ locale, dir, t }), [locale, t]);
+  const value = useMemo(() => ({ locale, dir, t }), [locale, dir, t]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

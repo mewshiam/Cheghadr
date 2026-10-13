@@ -1,4 +1,4 @@
-import jalaali from "jalaali-js";
+import * as jalaali from "jalaali-js";
 import type { Locale } from "@/lib/i18n";
 
 /** Persian digit shaping (blueprint §16: Persian digits by default, Latin optional). */

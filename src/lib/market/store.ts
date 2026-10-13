@@ -161,7 +161,7 @@ export const useCheghadr = create<CheghadrState>()(
       recentPairs: [],
       pushPair: (from, to) => {
         const cur = get().recentPairs.filter(([f, t]) => !(f === from && t === to));
-        set({ recentPairs: [[from, to], ...cur].slice(0, 5) });
+        set({ recentPairs: [[from, to] as [string, string], ...cur].slice(0, 5) });
       },
 
       searchHistory: [],
