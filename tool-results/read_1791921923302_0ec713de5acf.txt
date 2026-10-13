@@ -1,0 +1,1293 @@
+     1→     1→Build «چقدر؟» — A Complete Native Android Market Tracker
+     2→     2→
+     3→     3→1. Role and mission
+     4→     4→
+     5→     5→Act as a senior Android engineer, Kotlin architect, Material Design specialist, data-engineering engineer, and QA lead.
+     6→     6→
+     7→     7→Build «چقدر؟», a polished, production-minded, native Android application for tracking Iranian and international currency exchange rates, gold, coins, cryptocurrencies, stock markets, indices, and other supported commodities.
+     8→     8→
+     9→     9→The product should combine the simplicity of Chand on iOS and Alanchand on Android with a more customizable Material 3 interface, advanced widgets, configurable price alerts, comprehensive historical charts, offline support, and a flexible data-provider system.
+    10→    10→
+    11→    11→Do not stop at planning, a Figma design, screenshots, or a UI prototype. Implement the working application, its data layer, persistence, background tasks, widgets, tests, documentation, and build configuration.
+    12→    12→
+    13→    13→Primary objective: make the application minimal at first glance but powerful when explored.
+    14→    14→
+    15→    15→2. Non-negotiable requirements
+    16→    16→
+    17→    17→Build a genuinely native Android application.
+    18→    18→
+    19→    19→Use Kotlin and Jetpack Compose with Material 3.
+    20→    20→
+    21→    21→Do not build a WebView-based app, website wrapper, or React Native/Flutter replacement.
+    22→    22→
+    23→    23→Support Persian and English throughout the application.
+    24→    24→
+    25→    25→Make Persian the default language, with correct RTL layout, Persian typography, Jalali date presentation, and localized numbers.
+    26→    26→
+    27→    27→Support light mode, dark mode, and Android dynamic colors.
+    28→    28→
+    29→    29→Use multiple interchangeable market-data providers.
+    30→    30→
+    31→    31→Investigate free and legally usable data sources before choosing providers.
+    32→    32→
+    33→    33→Prefer TGJU-compatible data where permitted, supplemented by other appropriate providers.
+    34→    34→
+    35→    35→Implement functional Android home-screen widgets, notifications, historical charts, favorites, search, converters, and offline caching.
+    36→    36→
+    37→    37→Support both local APK installation and a reproducible release build.
+    38→    38→
+    39→    39→Never display invented prices as real market data.
+    40→    40→
+    41→    41→Never claim that an API is free, commercial-use compatible, real-time, or historically comprehensive without verifying its current terms and capabilities.
+    42→    42→
+    43→    43→3. Research and data-source discovery
+    44→    44→
+    45→    45→Before implementing integrations, investigate each source's official documentation, terms, pricing, rate limits, update frequency, historical coverage, authentication requirements, attribution requirements, and availability from the intended deployment environment.
+    46→    46→
+    47→    47→Create docs/DATA_SOURCES.md documenting the findings, access dates, verified URLs, example response formats, limitations, and implementation decisions.
+    48→    48→
+    49→    49→3.1 TGJU
+    50→    50→
+    51→    51→Investigate:
+    52→    52→
+    53→    53→https://www.tgju.org/
+    54→    54→
+    55→    55→https://help.tgju.org/
+    56→    56→
+    57→    57→https://gem.tgju.org/terms
+    58→    58→
+    59→    59→TGJU is a priority candidate for Iranian market data, including:
+    60→    60→
+    61→    61→Free-market currency rates.
+    62→    62→
+    63→    63→SANA exchange rates.
+    64→    64→
+    65→    65→Gold prices.
+    66→    66→
+    67→    67→Coin prices.
+    68→    68→
+    69→    69→Coin bubbles/premiums, if available.
+    70→    70→
+    71→    71→Domestic stock-market data and indices.
+    72→    72→
+    73→    73→International gold, silver, commodities, and currencies.
+    74→    74→
+    75→    75→Cryptocurrency prices.
+    76→    76→
+    77→    77→Do not assume that every category is available through the same endpoint or under the same access conditions.
+    78→    78→
+    79→    79→TGJU documents JSON and XML web-service formats. Investigate the official API and its actual pricing before considering it unavailable or free.
+    80→    80→
+    81→    81→The site also states that copying its content requires written permission. Consequently:
+    82→    82→
+    83→    83→Investigate whether the required data may legally be collected, stored, transformed, and redistributed.
+    84→    84→
+    85→    85→Prefer an officially documented API or written authorization.
+    86→    86→
+    87→    87→Treat HTML scraping as a conditional provider implementation, not automatic authorization.
+    88→    88→
+    89→    89→Do not bypass authentication, CAPTCHAs, access controls, or anti-bot restrictions.
+    90→    90→
+    91→    91→Do not evade rate limits or rotate identities to circumvent restrictions.
+    92→    92→
+    93→    93→If authorization is unavailable, leave TGJU scraping disabled and implement alternative providers.
+    94→    94→
+    95→    95→Keep all provider-specific code isolated so the source can be enabled, disabled, or replaced without rewriting the app.
+    96→    96→
+    97→    97→The user prefers TGJU as a source even if it requires scraping. Preserve that preference where permissible, but never make the application depend on an unauthorized or fragile scraping implementation.
+    98→    98→
+    99→    99→If authorized scraping is implemented, use a backend ingestion worker rather than scraping from each user's device. Parse structured data where possible, validate every extracted field, detect layout changes, and expose provider health and stale-data status.
+   100→   100→
+   101→   101→Do not use undocumented endpoints discovered by guesswork. Verify actual requests and responses before implementing them.
+   102→   102→
+   103→   103→3.2 Free and alternative sources
+   104→   104→
+   105→   105→Evaluate, rather than blindly adopt, the following:
+   106→   106→
+   107→   107→CoinGecko: https://www.coingecko.com/en/api/ — cryptocurrency prices and available historical data. Its free Demo plan has documented request and usage limits and attribution requirements. Verify the current plan and whether the intended distribution is allowed.
+   108→   108→
+   109→   109→CoinMarketCap: https://coinmarketcap.com/api/ — evaluate its current free tier, usage limits, attribution, and redistribution terms.
+   110→   110→
+   111→   111→CoinPaprika: https://api.coinpaprika.com/ — evaluate its current free endpoints, historical coverage, and personal/commercial-use restrictions.
+   112→   112→
+   113→   113→Exchange public APIs: official exchange APIs can provide exchange-specific cryptocurrency prices and candles. Do not describe one exchange's price as a global market price.
+   114→   114→
+   115→   115→Central-bank and official exchange-rate sources: evaluate publicly accessible official sources for their specific rate types and permitted usage.
+   116→   116→
+   117→   117→Domestic market-data providers: investigate published APIs or downloadable datasets for Iranian gold, coins, equities, indices, and commodities.
+   118→   118→
+   119→   119→A source that provides USD cryptocurrency prices does not automatically provide reliable Iranian toman prices. A source that provides official exchange rates does not automatically provide free-market rates.
+   120→   120→
+   121→   121→3.3 Source selection rules
+   122→   122→
+   123→   123→Build a source capability matrix covering each market category, data type, refresh frequency, history, licensing, attribution, quotas, and failure modes.
+   124→   124→
+   125→   125→Select providers per category rather than forcing every market into a single provider.
+   126→   126→
+   127→   127→For the initial release:
+   128→   128→
+   129→   129→Prefer a no-subscription-cost data configuration wherever viable.
+   130→   130→
+   131→   131→Require configuration for API keys.
+   132→   132→
+   133→   133→Do not commit secrets to the repository.
+   134→   134→
+   135→   135→Do not use fake fallback prices.
+   136→   136→
+   137→   137→If no permissible source exists for a category, display an informative unavailable state and document the limitation.
+   138→   138→
+   139→   139→A free API tier does not necessarily permit unrestricted public redistribution. Verify this before enabling a public release.
+   140→   140→
+   141→   141→4. Architecture
+   142→   142→
+   143→   143→Use a modular, maintainable, testable Android architecture with clear boundaries.
+   144→   144→
+   145→   145→Suggested modules:
+   146→   146→
+   147→   147→app: application entry point, navigation, and dependency setup.
+   148→   148→
+   149→   149→core:model: shared domain models.
+   150→   150→
+   151→   151→core:designsystem: Material 3 theme, typography, reusable components.
+   152→   152→
+   153→   153→core:database: Room database and migrations.
+   154→   154→
+   155→   155→core:network: networking infrastructure and serialization.
+   156→   156→
+   157→   157→core:common: shared formatting, date, and utility code.
+   158→   158→
+   159→   159→core:notifications: notification channels and alert scheduling.
+   160→   160→
+   161→   161→core:widgets: Android App Widgets and widget configuration.
+   162→   162→
+   163→   163→feature:home: customizable dashboard.
+   164→   164→
+   165→   165→feature:markets: currency, gold, coin, crypto, stocks, and commodities.
+   166→   166→
+   167→   167→feature:assetdetails: detailed quotes and charts.
+   168→   168→
+   169→   169→feature:search: universal market search.
+   170→   170→
+   171→   171→feature:favorites: watchlists and pinned assets.
+   172→   172→
+   173→   173→feature:converter: currency and gold calculator.
+   174→   174→
+   175→   175→feature:portfolio: optional local portfolio tracking.
+   176→   176→
+   177→   177→feature:alerts: price alerts and notification preferences.
+   178→   178→
+   179→   179→feature:settings: language, appearance, data, and privacy settings.
+   180→   180→
+   181→   181→data:provider-api: provider interfaces and normalized market models.
+   182→   182→
+   183→   183→data:provider-tgju: TGJU integration, enabled only when permitted.
+   184→   184→
+   185→   185→data:provider-crypto: selected cryptocurrency providers.
+   186→   186→
+   187→   187→data:provider-fallback: alternative permitted providers.
+   188→   188→
+   189→   189→sync: refresh scheduling and ingestion coordination, where appropriate.
+   190→   190→
+   191→   191→Adjust module boundaries if the repository or implementation scale makes a simpler structure more practical. Preserve separation of concerns.
+   192→   192→
+   193→   193→Technology preferences
+   194→   194→
+   195→   195→Use current stable versions compatible with one another at implementation time:
+   196→   196→
+   197→   197→Kotlin.
+   198→   198→
+   199→   199→Jetpack Compose.
+   200→   200→
+   201→   201→Material 3.
+   202→   202→
+   203→   203→Navigation Compose.
+   204→   204→
+   205→   205→ViewModel and lifecycle-aware state collection.
+   206→   206→
+   207→   207→Kotlin Coroutines and Flow.
+   208→   208→
+   209→   209→Room.
+   210→   210→
+   211→   211→DataStore.
+   212→   212→
+   213→   213→WorkManager.
+   214→   214→
+   215→   215→Retrofit or Ktor Client with a suitable serialization library.
+   216→   216→
+   217→   217→Hilt or another appropriate dependency-injection solution.
+   218→   218→
+   219→   219→A maintained native charting library, or a custom Compose Canvas chart where appropriate.
+   220→   220→
+   221→   221→Android Glance for widgets when it meets the required widget capabilities.
+   222→   222→
+   223→   223→Use a repository pattern, unidirectional UI state flow, immutable UI models, and structured concurrency.
+   224→   224→
+   225→   225→Avoid unnecessary abstractions and excessive dependencies. Record the selected versions in the version catalog and document major architectural choices.
+   226→   226→
+   227→   227→5. Native UI and Material 3 design system
+   228→   228→
+   229→   229→Create a distinctive visual identity for «چقدر؟».
+   230→   230→
+   231→   231→Design principles
+   232→   232→
+   233→   233→Minimal visual density on first launch.
+   234→   234→
+   235→   235→Clear typography and price hierarchy.
+   236→   236→
+   237→   237→Generous but efficient spacing.
+   238→   238→
+   239→   239→Rounded surfaces used consistently rather than excessively.
+   240→   240→
+   241→   241→Restrained green/red change indicators, with arrows or signs so color is not the only indicator.
+   242→   242→
+   243→   243→Native-feeling transitions and touch feedback.
+   244→   244→
+   245→   245→Accessible contrast and scalable text.
+   246→   246→
+   247→   247→Skeleton loading, empty states, error states, and offline states.
+   248→   248→
+   249→   249→No fake glass effects, excessive gradients, or unnecessary decoration.
+   250→   250→
+   251→   251→No mandatory onboarding carousel.
+   252→   252→
+   253→   253→Theme
+   254→   254→
+   255→   255→Support:
+   256→   256→
+   257→   257→Light theme.
+   258→   258→
+   259→   259→Dark theme.
+   260→   260→
+   261→   261→System theme.
+   262→   262→
+   263→   263→Dynamic Material You colors on supported Android versions.
+   264→   264→
+   265→   265→An optional fixed brand palette.
+   266→   266→
+   267→   267→Persisted user theme preference.
+   268→   268→
+   269→   269→Use Material 3 typography, shapes, color roles, and components consistently.
+   270→   270→
+   271→   271→Choose a readable Persian font with appropriate licensing and proper glyph coverage. Verify Persian punctuation, Latin ticker symbols, mixed-direction prices, and currency symbols.
+   272→   272→
+   273→   273→Use correct bidi isolation for mixed Persian/English text. Do not reverse ticker symbols or numeric values accidentally.
+   274→   274→
+   275→   275→Navigation
+   276→   276→
+   277→   277→Use a native bottom navigation bar with approximately five primary destinations:
+   278→   278→
+   279→   279→Home.
+   280→   280→
+   281→   281→Markets.
+   282→   282→
+   283→   283→Watchlist.
+   284→   284→
+   285→   285→Converter.
+   286→   286→
+   287→   287→More.
+   288→   288→
+   289→   289→The Markets destination can expose category tabs or a secondary navigation system. Settings, alerts, history, and portfolio remain accessible without overcrowding the main navigation.
+   290→   290→
+   291→   291→Provide a universal search entry point.
+   292→   292→
+   293→   293→Home screen
+   294→   294→
+   295→   295→The initial screen should be minimal, personalized, and customizable.
+   296→   296→
+   297→   297→Include:
+   298→   298→
+   299→   299→A compact header with app identity and search.
+   300→   300→
+   301→   301→Market update status and last successful refresh.
+   302→   302→
+   303→   303→User-selected featured prices.
+   304→   304→
+   305→   305→Daily absolute and percentage changes.
+   306→   306→
+   307→   307→Small optional trend charts.
+   308→   308→
+   309→   309→Quick access to currency conversion.
+   310→   310→
+   311→   311→A watchlist preview.
+   312→   312→
+   313→   313→Optional market summaries and additional dashboard sections.
+   314→   314→
+   315→   315→Allow users to:
+   316→   316→
+   317→   317→Add, remove, hide, and reorder dashboard sections.
+   318→   318→
+   319→   319→Choose featured assets.
+   320→   320→
+   321→   321→Change the number of displayed items.
+   322→   322→
+   323→   323→Toggle mini charts and daily changes.
+   324→   324→
+   325→   325→Select compact or comfortable density.
+   326→   326→
+   327→   327→Reset the dashboard layout.
+   328→   328→
+   329→   329→Persist customization locally.
+   330→   330→
+   331→   331→Provide a useful default configuration on first launch. Do not require the user to configure everything before seeing market information.
+   332→   332→
+   333→   333→Markets explorer
+   334→   334→
+   335→   335→Implement category navigation for:
+   336→   336→
+   337→   337→Foreign currencies.
+   338→   338→
+   339→   339→Gold.
+   340→   340→
+   341→   341→Coins.
+   342→   342→
+   343→   343→Cryptocurrencies.
+   344→   344→
+   345→   345→Stocks and indices.
+   346→   346→
+   347→   347→Commodities and other available markets.
+   348→   348→
+   349→   349→Each category should provide:
+   350→   350→
+   351→   351→Search.
+   352→   352→
+   353→   353→Favorites.
+   354→   354→
+   355→   355→Sort by name, price, absolute change, percentage change, and supported volume.
+   356→   356→
+   357→   357→Filtering where useful.
+   358→   358→
+   359→   359→Price and change columns/cards.
+   360→   360→
+   361→   361→Last-updated information.
+   362→   362→
+   363→   363→Pull-to-refresh.
+   364→   364→
+   365→   365→Loading, offline, empty, and error states.
+   366→   366→
+   367→   367→Only display fields supplied reliably by the selected provider.
+   368→   368→
+   369→   369→Asset details
+   370→   370→
+   371→   371→Each asset detail page should include:
+   372→   372→
+   373→   373→Asset name and ticker.
+   374→   374→
+   375→   375→Current quote.
+   376→   376→
+   377→   377→Market/source identification.
+   378→   378→
+   379→   379→Absolute and percentage changes.
+   380→   380→
+   381→   381→Latest update timestamp.
+   382→   382→
+   383→   383→Historical chart.
+   384→   384→
+   385→   385→Time-range selection.
+   386→   386→
+   387→   387→Favorite toggle.
+   388→   388→
+   389→   389→Create-alert action.
+   390→   390→
+   391→   391→Share action.
+   392→   392→
+   393→   393→Relevant statistics where available.
+   394→   394→
+   395→   395→Price-history table or expandable historical data.
+   396→   396→
+   397→   397→A clear explanation when a chart or field is unavailable.
+   398→   398→
+   399→   399→For assets available from multiple sources, expose source selection or comparison when meaningful. Never merge incompatible prices without explicit normalization and disclosure.
+   400→   400→
+   401→   401→6. Market data model
+   402→   402→
+   403→   403→Create a normalized domain model that can represent all supported markets.
+   404→   404→
+   405→   405→Suggested fields:
+   406→   406→
+   407→   407→Stable internal asset ID.
+   408→   408→
+   409→   409→Asset category.
+   410→   410→
+   411→   411→Canonical symbol and provider-specific symbols.
+   412→   412→
+   413→   413→Persian and English display names.
+   414→   414→
+   415→   415→Quote currency.
+   416→   416→
+   417→   417→Price value using decimal-safe numeric handling.
+   418→   418→
+   419→   419→Unit of measure.
+   420→   420→
+   421→   421→Market/session identifier where relevant.
+   422→   422→
+   423→   423→Absolute and percentage changes.
+   424→   424→
+   425→   425→Bid/ask only when genuinely available.
+   426→   426→
+   427→   427→Volume and market capitalization only when genuinely available.
+   428→   428→
+   429→   429→Provider ID.
+   430→   430→
+   431→   431→Provider's original timestamp when available.
+   432→   432→
+   433→   433→Fetch timestamp.
+   434→   434→
+   435→   435→Last successful update timestamp.
+   436→   436→
+   437→   437→Data freshness classification.
+   438→   438→
+   439→   439→Data quality/availability status.
+   440→   440→
+   441→   441→Use BigDecimal or another appropriate decimal representation for financial calculations. Avoid binary floating-point arithmetic for monetary totals.
+   442→   442→
+   443→   443→Distinguish:
+   444→   444→
+   445→   445→Rial versus toman.
+   446→   446→
+   447→   447→Official, SANA, free-market, and other rate categories.
+   448→   448→
+   449→   449→Gram, mithqal, ounce, and other gold units.
+   450→   450→
+   451→   451→Coin types and their respective pricing categories.
+   452→   452→
+   453→   453→USD-denominated crypto prices versus Iranian toman estimates.
+   454→   454→
+   455→   455→Local exchange prices versus global aggregated prices.
+   456→   456→
+   457→   457→Last price versus closing price for equities.
+   458→   458→
+   459→   459→Never silently convert or relabel a quote.
+   460→   460→
+   461→   461→Use canonical asset IDs and provider mappings. Do not use display names as database primary keys.
+   462→   462→
+   463→   463→7. Data ingestion, normalization, and fallback
+   464→   464→
+   465→   465→Create a common interface, for example:
+   466→   466→
+   467→   467→MarketDataProvider
+   468→   468→
+   469→   469→The exact interface should be designed around the real capabilities of the chosen providers and should expose supported categories, fetching, history, source metadata, and errors.
+   470→   470→
+   471→   471→Implement a provider registry that can select providers per category and asset.
+   472→   472→
+   473→   473→Ingestion rules
+   474→   474→
+   475→   475→Normalize provider responses into a common domain model.
+   476→   476→
+   477→   477→Validate positive prices where appropriate and handle legitimate zero/negative values only for instrument types that support them.
+   478→   478→
+   479→   479→Validate units, timestamps, symbols, decimal precision, and quote currencies.
+   480→   480→
+   481→   481→Reject malformed, contradictory, or implausibly changed data unless verified.
+   482→   482→
+   483→   483→Deduplicate assets.
+   484→   484→
+   485→   485→Record provider errors and last successful fetch times.
+   486→   486→
+   487→   487→Use bounded retries with exponential backoff and jitter.
+   488→   488→
+   489→   489→Respect rate limits and server retry instructions.
+   490→   490→
+   491→   491→Prevent concurrent duplicate refresh requests.
+   492→   492→
+   493→   493→Cache successful results.
+   494→   494→
+   495→   495→Never overwrite valid cached data with malformed responses.
+   496→   496→
+   497→   497→Maintain source attribution and timestamps throughout the data flow.
+   498→   498→
+   499→   499→Fallback behavior
+   500→   500→
+   501→   501→If a provider fails:
+   502→   502→
+   503→   503→Try another provider only if it supplies a semantically compatible quote.
+   504→   504→
+   505→   505→Keep the last known valid value.
+   506→   506→
+   507→   507→Mark it stale when appropriate.
+   508→   508→
+   509→   509→Explain the source and age of the data.
+   510→   510→
+   511→   511→Never imply that a stale value is current.
+   512→   512→
+   513→   513→Do not average conflicting provider values without a documented methodology.
+   514→   514→
+   515→   515→Scraping provider
+   516→   516→
+   517→   517→If TGJU scraping is authorized, implement it as a separate provider or backend worker.
+   518→   518→
+   519→   519→Requirements:
+   520→   520→
+   521→   521→Use verified page structures and actual observed responses.
+   522→   522→
+   523→   523→Parse data using resilient selectors or structured formats.
+   524→   524→
+   525→   525→Keep parsing logic separate from business logic.
+   526→   526→
+   527→   527→Validate results before publication.
+   528→   528→
+   529→   529→Detect HTML layout changes.
+   530→   530→
+   531→   531→Record parsing failures.
+   532→   532→
+   533→   533→Use conservative request frequency and caching.
+   534→   534→
+   535→   535→Identify the source and timestamp.
+   536→   536→
+   537→   537→Disable the provider cleanly if its terms or technical access change.
+   538→   538→
+   539→   539→Do not place an undocumented TGJU URL or guessed API endpoint into production code merely to make the integration appear complete.
+   540→   540→
+   541→   541→8. Currency and gold calculator
+   542→   542→
+   543→   543→Implement a native, fast calculator supporting:
+   544→   544→
+   545→   545→Currency conversion
+   546→   546→
+   547→   547→Amount input.
+   548→   548→
+   549→   549→Source and destination currency selection.
+   550→   550→
+   551→   551→Swap currencies.
+   552→   552→
+   553→   553→Quick selection of popular currencies.
+   554→   554→
+   555→   555→Correct precision and localized formatting.
+   556→   556→
+   557→   557→Last-used conversion pairs.
+   558→   558→
+   559→   559→Source-rate and timestamp disclosure.
+   560→   560→
+   561→   561→Offline conversion using cached rates with a visible stale-data warning.
+   562→   562→
+   563→   563→Gold calculator
+   564→   564→
+   565→   565→Support applicable conversions among:
+   566→   566→
+   567→   567→Gram and other supported weight units.
+   568→   568→
+   569→   569→Gold purity, including 18k and 24k.
+   570→   570→
+   571→   571→Gold quote units.
+   572→   572→
+   573→   573→Supported coin types.
+   574→   574→
+   575→   575→Optional user-entered making charges, tax, discounts, and other costs.
+   576→   576→
+   577→   577→Separate market-price calculations from estimated retail pricing.
+   578→   578→
+   579→   579→For retail estimates, display the calculation breakdown and label the result as an estimate. Do not assume that a displayed spot price equals a shop's final purchase or sale price.
+   580→   580→
+   581→   581→Avoid double-counting tax, fees, premiums, and making charges.
+   582→   582→
+   583→   583→All calculations must be deterministic and covered by unit tests.
+   584→   584→
+   585→   585→9. Historical charts
+   586→   586→
+   587→   587→Build interactive, native-feeling charts with:
+   588→   588→
+   589→   589→Intraday, 24-hour, 7-day, 30-day, 90-day, 6-month, 1-year, 5-year, and maximum ranges where supported.
+   590→   590→
+   591→   591→Automatic disabling or explanation of unavailable ranges.
+   592→   592→
+   593→   593→Line charts for supported price histories.
+   594→   594→
+   595→   595→OHLC/candlestick charts only where genuine open, high, low, and close data exists.
+   596→   596→
+   597→   597→Touch interaction and crosshair/value inspection.
+   598→   598→
+   599→   599→Time and price labels.
+   600→   600→
+   601→   601→Percentage-change summaries.
+   602→   602→
+   603→   603→Zooming or panning when useful and practical.
+   604→   604→
+   605→   605→Clear indication of the selected time range.
+   606→   606→
+   607→   607→Loading, empty, error, and insufficient-history states.
+   608→   608→
+   609→   609→Keep raw timestamps in a consistent time standard, preferably UTC. Render the appropriate local time and Jalali or Gregorian date in the UI.
+   610→   610→
+   611→   611→Never fabricate historical samples to make a chart look complete. Mark gaps and provider changes when they materially affect the series.
+   612→   612→
+   613→   613→10. Android home-screen widgets
+   614→   614→
+   615→   615→Widgets are a core feature, not a later enhancement.
+   616→   616→
+   617→   617→Implement actual Android App Widgets using Glance where suitable. Provide configuration screens and native widget behavior.
+   618→   618→
+   619→   619→Widget types
+   620→   620→
+   621→   621→Compact single-price widget.
+   622→   622→
+   623→   623→Multi-asset list widget.
+   624→   624→
+   625→   625→Currency conversion widget.
+   626→   626→
+   627→   627→Gold and coin price widget.
+   628→   628→
+   629→   629→Crypto watchlist widget.
+   630→   630→
+   631→   631→Watchlist with daily percentage changes.
+   632→   632→
+   633→   633→Optional mini-chart widget where supported.
+   634→   634→
+   635→   635→Larger customizable dashboard widget.
+   636→   636→
+   637→   637→Widget behavior
+   638→   638→
+   639→   639→Multiple sizes and responsive layouts.
+   640→   640→
+   641→   641→User-selected assets.
+   642→   642→
+   643→   643→User-selected category or watchlist.
+   644→   644→
+   645→   645→Light/dark appearance.
+   646→   646→
+   647→   647→Correct Persian RTL and English LTR behavior.
+   648→   648→
+   649→   649→Tap a price to open its detail page.
+   650→   650→
+   651→   651→Tap refresh to request an appropriate refresh operation.
+   652→   652→
+   653→   653→Configure assets and layout independently per widget.
+   654→   654→
+   655→   655→Update after successful data synchronization.
+   656→   656→
+   657→   657→Use cached prices while offline and label stale values.
+   658→   658→
+   659→   659→Avoid unnecessary network requests for every widget instance.
+   660→   660→
+   661→   661→Handle widget deletion, reconfiguration, reboot, and process death.
+   662→   662→
+   663→   663→Respect Android background execution limits.
+   664→   664→
+   665→   665→Persist widget configuration separately from transient UI state.
+   666→   666→
+   667→   667→Use Android's widget update mechanisms and supported periodic refresh behavior. Do not promise arbitrary minute-by-minute background updates that Android may defer.
+   668→   668→
+   669→   669→Provide previews for supported widget sizes and test them on multiple Android launchers.
+   670→   670→
+   671→   671→11. Price alerts and reminders
+   672→   672→
+   673→   673→Implement a complete local alert system.
+   674→   674→
+   675→   675→Price alerts
+   676→   676→
+   677→   677→Allow users to configure:
+   678→   678→
+   679→   679→Price above a threshold.
+   680→   680→
+   681→   681→Price below a threshold.
+   682→   682→
+   683→   683→Percentage increase or decrease.
+   684→   684→
+   685→   685→Daily absolute or percentage movement, where reliable.
+   686→   686→
+   687→   687→Optional recurring threshold monitoring.
+   688→   688→
+   689→   689→Per-asset alert enable/disable.
+   690→   690→
+   691→   691→Optional repeat intervals and cooldown periods.
+   692→   692→
+   693→   693→Reminder behavior
+   694→   694→
+   695→   695→Scheduled daily or weekly market summaries.
+   696→   696→
+   697→   697→User-selected summary time.
+   698→   698→
+   699→   699→Quiet hours.
+   700→   700→
+   701→   701→Notification preferences by market category.
+   702→   702→
+   703→   703→Per-alert sound/vibration preferences using supported Android APIs.
+   704→   704→
+   705→   705→Optional daily change summary.
+   706→   706→
+   707→   707→Notification actions to open the asset, dismiss the alert, or manage the rule.
+   708→   708→
+   709→   709→Correctness
+   710→   710→
+   711→   711→Prevent duplicate notifications for the same crossing.
+   712→   712→
+   713→   713→Define re-arming behavior when the price crosses back.
+   714→   714→
+   715→   715→Persist alert state and last-triggered information.
+   716→   716→
+   717→   717→Do not trigger an alert from stale data unless the user explicitly opts into that behavior.
+   718→   718→
+   719→   719→Clearly distinguish local-device monitoring from server-side monitoring.
+   720→   720→
+   721→   721→Explain that local alerts can be delayed by Android scheduling, device inactivity, battery optimization, or network unavailability.
+   722→   722→
+   723→   723→Use WorkManager for deferrable background work and appropriate platform scheduling for user-visible time-sensitive reminders. Handle Android notification permission requirements and exact-alarm restrictions correctly.
+   724→   724→
+   725→   725→Do not request excessive permissions or claim guaranteed real-time alert delivery without a continuously available backend.
+   726→   726→
+   727→   727→12. Offline caching and persistence
+   728→   728→
+   729→   729→Use Room for:
+   730→   730→
+   731→   731→Latest quotes.
+   732→   732→
+   733→   733→Quote history available to the app.
+   734→   734→
+   735→   735→Asset metadata.
+   736→   736→
+   737→   737→Favorites and watchlists.
+   738→   738→
+   739→   739→Dashboard customization.
+   740→   740→
+   741→   741→Alert rules and trigger state.
+   742→   742→
+   743→   743→Converter history, if enabled.
+   744→   744→
+   745→   745→Local portfolio records, if enabled.
+   746→   746→
+   747→   747→Provider health and refresh metadata where appropriate.
+   748→   748→
+   749→   749→Use DataStore for application preferences, including:
+   750→   750→
+   751→   751→Language.
+   752→   752→
+   753→   753→Theme.
+   754→   754→
+   755→   755→Number formatting.
+   756→   756→
+   757→   757→Dashboard settings.
+   758→   758→
+   759→   759→Refresh preferences.
+   760→   760→
+   761→   761→Notification preferences.
+   762→   762→
+   763→   763→Requirements:
+   764→   764→
+   765→   765→Display cached data immediately.
+   766→   766→
+   767→   767→Refresh in the background when appropriate.
+   768→   768→
+   769→   769→Mark old data as stale.
+   770→   770→
+   771→   771→Preserve favorites, alerts, and user configuration offline.
+   772→   772→
+   773→   773→Apply database migrations safely.
+   774→   774→
+   775→   775→Define retention limits for locally stored historical samples.
+   776→   776→
+   777→   777→Avoid storing redundant copies of large datasets.
+   778→   778→
+   779→   779→Make cache eviction predictable and testable.
+   780→   780→
+   781→   781→Use a repository-backed stream so the UI updates after successful refreshes without requiring a full-screen reload.
+   782→   782→
+   783→   783→13. Refresh policy and battery efficiency
+   784→   784→
+   785→   785→Implement adaptive refresh behavior based on:
+   786→   786→
+   787→   787→App foreground/background state.
+   788→   788→
+   789→   789→Network availability.
+   790→   790→
+   791→   791→Provider rate limits.
+   792→   792→
+   793→   793→Market sessions and asset category.
+   794→   794→
+   795→   795→User-selected refresh preferences.
+   796→   796→
+   797→   797→Data freshness requirements.
+   798→   798→
+   799→   799→Android battery and background execution constraints.
+   800→   800→
+   801→   801→Use:
+   802→   802→
+   803→   803→Immediate cached rendering.
+   804→   804→
+   805→   805→Refresh on app launch or foreground entry when appropriate.
+   806→   806→
+   807→   807→Pull-to-refresh.
+   808→   808→
+   809→   809→Request coalescing.
+   810→   810→
+   811→   811→Bounded background synchronization.
+   812→   812→
+   813→   813→Backoff following failures or throttling.
+   814→   814→
+   815→   815→Appropriate periodic work for widgets and alerts.
+   816→   816→
+   817→   817→Avoid polling each asset individually when bulk requests are available.
+   818→   818→
+   819→   819→Do not treat a scheduled background worker's requested interval as a guaranteed execution time.
+   820→   820→
+   821→   821→Expose the last successful update and data age. Provide a manual refresh option and an understandable status indicator.
+   822→   822→
+   823→   823→14. Search, favorites, sharing, and export
+   824→   824→
+   825→   825→Implement:
+   826→   826→
+   827→   827→Universal search across asset names, tickers, and supported aliases.
+   828→   828→
+   829→   829→Persian and English search terms.
+   830→   830→
+   831→   831→Search history with a clear-history action.
+   832→   832→
+   833→   833→Favorites and multiple watchlists if practical.
+   834→   834→
+   835→   835→Reordering and removal of favorites.
+   836→   836→
+   837→   837→Sorting and filtering.
+   838→   838→
+   839→   839→Shareable text summaries containing source and timestamp.
+   840→   840→
+   841→   841→Native Android share sheet integration.
+   842→   842→
+   843→   843→CSV export of supported historical records and portfolio data.
+   844→   844→
+   845→   845→Optional image export of charts or price cards.
+   846→   846→
+   847→   847→Import/export of user settings and watchlists where practical.
+   848→   848→
+   849→   849→Validate exported data and local file permissions. Avoid including private information unexpectedly.
+   850→   850→
+   851→   851→15. Portfolio tracking
+   852→   852→
+   853→   853→Include an optional local-only portfolio feature if it can be implemented without delaying the core functionality.
+   854→   854→
+   855→   855→Support:
+   856→   856→
+   857→   857→Add asset.
+   858→   858→
+   859→   859→Buy/sell transaction records.
+   860→   860→
+   861→   861→Quantity and purchase price.
+   862→   862→
+   863→   863→Fees where relevant.
+   864→   864→
+   865→   865→Average acquisition cost.
+   866→   866→
+   867→   867→Current estimated value.
+   868→   868→
+   869→   869→Unrealized profit/loss.
+   870→   870→
+   871→   871→Realized profit/loss when transaction accounting supports it.
+   872→   872→
+   873→   873→Asset allocation.
+   874→   874→
+   875→   875→Transaction history.
+   876→   876→
+   877→   877→Export.
+   878→   878→
+   879→   879→Clearly distinguish realized and unrealized results. Handle partial sales, multiple purchases, fees, decimal precision, and missing current prices.
+   880→   880→
+   881→   881→Portfolio calculations must not be presented as accounting or investment advice.
+   882→   882→
+   883→   883→Do not require users to connect a brokerage, exchange, or financial account.
+   884→   884→
+   885→   885→16. Persian and English localization
+   886→   886→
+   887→   887→Implement complete localization from the beginning.
+   888→   888→
+   889→   889→Persian
+   890→   890→
+   891→   891→RTL layout.
+   892→   892→
+   893→   893→Persian translations and market terminology.
+   894→   894→
+   895→   895→Persian digits by default, with an optional Latin-digit preference.
+   896→   896→
+   897→   897→Jalali date formatting.
+   898→   898→
+   899→   899→Correct Persian punctuation and font rendering.
+   900→   900→
+   901→   901→Correct alignment of charts, controls, icons, and mixed-direction text.
+   902→   902→
+   903→   903→English
+   904→   904→
+   905→   905→LTR layout.
+   906→   906→
+   907→   907→English labels and descriptions.
+   908→   908→
+   909→   909→Gregorian date formatting by default.
+   910→   910→
+   911→   911→Standard English numeric formatting.
+   912→   912→
+   913→   913→Both
+   914→   914→
+   915→   915→Switch languages in settings without reinstalling.
+   916→   916→
+   917→   917→Persist the language selection.
+   918→   918→
+   919→   919→Keep data models and internal timestamps language-independent.
+   920→   920→
+   921→   921→Avoid hard-coded strings in UI components.
+   922→   922→
+   923→   923→Use Android locale configuration appropriately.
+   924→   924→
+   925→   925→Test long labels, narrow screens, large fonts, and accessibility settings.
+   926→   926→
+   927→   927→Use reliable localization libraries or supported Android APIs for Jalali dates; do not implement the calendar conversion through untested arithmetic.
+   928→   928→
+   929→   929→17. Security, privacy, and reliability
+   930→   930→
+   931→   931→Keep API keys out of source control.
+   932→   932→
+   933→   933→Avoid embedding privileged provider secrets in the APK.
+   934→   934→
+   935→   935→If a provider requires a secret, use a controlled backend when appropriate.
+   936→   936→
+   937→   937→Restrict network requests to necessary hosts.
+   938→   938→
+   939→   939→Validate network responses and input.
+   940→   940→
+   941→   941→Use HTTPS where supported.
+   942→   942→
+   943→   943→Avoid collecting unnecessary personal data.
+   944→   944→
+   945→   945→Keep portfolio and preferences local unless explicitly configured otherwise.
+   946→   946→
+   947→   947→Do not add account registration unless a real requirement emerges.
+   948→   948→
+   949→   949→Do not silently upload watchlists, portfolio information, or usage data.
+   950→   950→
+   951→   951→Provide transparent source attribution.
+   952→   952→
+   953→   953→Include a privacy policy template for any public release that accurately describes actual behavior.
+   954→   954→
+   955→   955→Provide understandable provider failure messages and logging without leaking secrets.
+   956→   956→
+   957→   957→If a backend is introduced, keep it small and deployable independently. Do not require a paid cloud service merely to launch the local APK.
+   958→   958→
+   959→   959→18. Accessibility and performance
+   960→   960→
+   961→   961→Support:
+   962→   962→
+   963→   963→TalkBack.
+   964→   964→
+   965→   965→Semantic labels for prices, changes, chart controls, and widgets.
+   966→   966→
+   967→   967→Large font sizes.
+   968→   968→
+   969→   969→Sufficient contrast.
+   970→   970→
+   971→   971→Non-color indicators for positive/negative changes.
+   972→   972→
+   973→   973→Appropriate touch targets.
+   974→   974→
+   975→   975→Smooth scrolling.
+   976→   976→
+   977→   977→Efficient recomposition.
+   978→   978→
+   979→   979→Lazy lists for large markets.
+   980→   980→
+   981→   981→Pagination or search for large datasets.
+   982→   982→
+   983→   983→Efficient chart rendering.
+   984→   984→
+   985→   985→Reasonable memory usage.
+   986→   986→
+   987→   987→Do not block the main thread with networking, database operations, parsing, or expensive calculations.
+   988→   988→
+   989→   989→Test on a range of screen sizes, densities, and supported Android versions.
+   990→   990→
+   991→   991→19. Testing strategy
+   992→   992→
+   993→   993→Write and run automated tests for:
+   994→   994→
+   995→   995→Unit tests
+   996→   996→
+   997→   997→Currency conversion.
+   998→   998→
+   999→   999→Gold purity and weight calculations.
+  1000→  1000→
+  1001→  1001→Rounding and localization.
+  1002→  1002→
+  1003→  1003→Price-change calculations.
+  1004→  1004→
+  1005→  1005→Source normalization.
+  1006→  1006→
+  1007→  1007→Staleness classification.
+  1008→  1008→
+  1009→  1009→Alert threshold crossings.
+  1010→  1010→
+  1011→  1011→Duplicate-alert prevention and re-arming.
+  1012→  1012→
+  1013→  1013→Portfolio profit/loss.
+  1014→  1014→
+  1015→  1015→Jalali and Gregorian formatting.
+  1016→  1016→
+  1017→  1017→Invalid and missing data handling.
+  1018→  1018→
+  1019→  1019→Integration tests
+  1020→  1020→
+  1021→  1021→API response parsing.
+  1022→  1022→
+  1023→  1023→Database persistence.
+  1024→  1024→
+  1025→  1025→Room migrations.
+  1026→  1026→
+  1027→  1027→Provider failure and fallback.
+  1028→  1028→
+  1029→  1029→Cache behavior.
+  1030→  1030→
+  1031→  1031→Background refresh scheduling.
+  1032→  1032→
+  1033→  1033→Alert persistence.
+  1034→  1034→
+  1035→  1035→Widget configuration persistence.
+  1036→  1036→
+  1037→  1037→UI tests
+  1038→  1038→
+  1039→  1039→First launch.
+  1040→  1040→
+  1041→  1041→Home dashboard customization.
+  1042→  1042→
+  1043→  1043→Category navigation.
+  1044→  1044→
+  1045→  1045→Search and favorites.
+  1046→  1046→
+  1047→  1047→Asset detail and charts.
+  1048→  1048→
+  1049→  1049→Converter.
+  1050→  1050→
+  1051→  1051→Alert creation and editing.
+  1052→  1052→
+  1053→  1053→Settings and language switching.
+  1054→  1054→
+  1055→  1055→RTL/LTR layouts.
+  1056→  1056→
+  1057→  1057→Light/dark/dynamic themes.
+  1058→  1058→
+  1059→  1059→Offline and error states.
+  1060→  1060→
+  1061→  1061→Widget and notification tests
+  1062→  1062→
+  1063→  1063→Widget configuration.
+  1064→  1064→
+  1065→  1065→Multiple widget instances.
+  1066→  1066→
+  1067→  1067→Correct asset selection.
+  1068→  1068→
+  1069→  1069→Tap actions and navigation.
+  1070→  1070→
+  1071→  1071→Cached/stale price presentation.
+  1072→  1072→
+  1073→  1073→Notification permissions.
+  1074→  1074→
+  1075→  1075→Alert threshold crossing.
+  1076→  1076→
+  1077→  1077→Quiet hours and duplicate prevention.
+  1078→  1078→
+  1079→  1079→Reboot/process-death recovery where testable.
+  1080→  1080→
+  1081→  1081→Build verification
+  1082→  1082→
+  1083→  1083→Run the relevant Gradle tasks, including unit tests, lint, and debug assembly. Run instrumentation tests where an emulator or device is available.
+  1084→  1084→
+  1085→  1085→Do not report tests as passing unless they were actually executed. Document any tests that could not run and why.
+  1086→  1086→
+  1087→  1087→20. Project documentation and delivery
+  1088→  1088→
+  1089→  1089→Create:
+  1090→  1090→
+  1091→  1091→README.md — project overview and setup.
+  1092→  1092→
+  1093→  1093→docs/ARCHITECTURE.md — module and data-flow diagrams.
+  1094→  1094→
+  1095→  1095→docs/DATA_SOURCES.md — verified source matrix, terms, quotas, and endpoints.
+  1096→  1096→
+  1097→  1097→docs/DATA_LICENSES.md — source-specific usage and redistribution considerations.
+  1098→  1098→
+  1099→  1099→docs/BUILD.md — SDK, Java, Gradle, and build instructions.
+  1100→  1100→
+  1101→  1101→docs/FEATURES.md — implemented and deferred functionality.
+  1102→  1102→
+  1103→  1103→docs/TESTING.md — tests executed and results.
+  1104→  1104→
+  1105→  1105→docs/PRIVACY.md — actual data handling and privacy behavior.
+  1106→  1106→
+  1107→  1107→.env.example or an equivalent safe configuration template without real credentials.
+  1108→  1108→
+  1109→  1109→Sample configuration for optional providers.
+  1110→  1110→
+  1111→  1111→A release checklist.
+  1112→  1112→
+  1113→  1113→Deliver:
+  1114→  1114→
+  1115→  1115→Complete source code.
+  1116→  1116→
+  1117→  1117→A debug APK that can be installed directly.
+  1118→  1118→
+  1119→  1119→A release build configuration.
+  1120→  1120→
+  1121→  1121→Instructions for producing a signed release APK or Android App Bundle.
+  1122→  1122→
+  1123→  1123→A list of required provider credentials, if any.
+  1124→  1124→
+  1125→  1125→A list of data sources that work without credentials.
+  1126→  1126→
+  1127→  1127→A list of limitations and licensing dependencies.
+  1128→  1128→
+  1129→  1129→A reproducible build and test procedure.
+  1130→  1130→
+  1131→  1131→Do not commit signing keys, passwords, or API secrets.
+  1132→  1132→
+  1133→  1133→If the environment cannot generate an APK, complete the source project, execute the available checks, and explain exactly what prevents APK generation.
+  1134→  1134→
+  1135→  1135→21. Implementation phases
+  1136→  1136→
+  1137→  1137→Work incrementally and keep the project buildable.
+  1138→  1138→
+  1139→  1139→Phase 1 — Discovery and foundation
+  1140→  1140→
+  1141→  1141→Inspect the existing repository.
+  1142→  1142→
+  1143→  1143→Verify the development environment.
+  1144→  1144→
+  1145→  1145→Research provider documentation and terms.
+  1146→  1146→
+  1147→  1147→Build the data-source capability matrix.
+  1148→  1148→
+  1149→  1149→Select the minimum Android SDK based on actual compatibility needs.
+  1150→  1150→
+  1151→  1151→Establish the architecture, Gradle configuration, theme, localization, and CI/build checks.
+  1152→  1152→
+  1153→  1153→Phase 2 — Data and persistence
+  1154→  1154→
+  1155→  1155→Implement domain models.
+  1156→  1156→
+  1157→  1157→Implement provider interfaces.
+  1158→  1158→
+  1159→  1159→Implement the first verified working data sources.
+  1160→  1160→
+  1161→  1161→Add Room and DataStore.
+  1162→  1162→
+  1163→  1163→Add validation, caching, error handling, and source timestamps.
+  1164→  1164→
+  1165→  1165→Prove the complete flow from a real provider response to the UI.
+  1166→  1166→
+  1167→  1167→Phase 3 — Core market experience
+  1168→  1168→
+  1169→  1169→Build the home dashboard.
+  1170→  1170→
+  1171→  1171→Implement markets and category lists.
+  1172→  1172→
+  1173→  1173→Add search, favorites, sorting, and asset details.
+  1174→  1174→
+  1175→  1175→Add native charts.
+  1176→  1176→
+  1177→  1177→Add currency and gold calculators.
+  1178→  1178→
+  1179→  1179→Verify Persian and English presentation.
+  1180→  1180→
+  1181→  1181→Phase 4 — Personalization and Android integration
+  1182→  1182→
+  1183→  1183→Add dashboard customization.
+  1184→  1184→
+  1185→  1185→Implement App Widgets.
+  1186→  1186→
+  1187→  1187→Add price alerts and reminders.
+  1188→  1188→
+  1189→  1189→Implement adaptive refresh and offline states.
+  1190→  1190→
+  1191→  1191→Add notification settings.
+  1192→  1192→
+  1193→  1193→Phase 5 — Advanced functionality
+  1194→  1194→
+  1195→  1195→Add portfolio tracking.
+  1196→  1196→
+  1197→  1197→Add sharing and export.
+  1198→  1198→
+  1199→  1199→Add optional provider comparison.
+  1200→  1200→
+  1201→  1201→Improve historical data and chart interactions.
+  1202→  1202→
+  1203→  1203→Complete accessibility and performance optimization.
+  1204→  1204→
+  1205→  1205→Phase 6 — QA and release
+  1206→  1206→
+  1207→  1207→Run unit, integration, UI, and widget tests.
+  1208→  1208→
+  1209→  1209→Fix build errors and regressions.
+  1210→  1210→
+  1211→  1211→Test real network failures and stale data.
+  1212→  1212→
+  1213→  1213→Verify RTL/LTR and theme variants.
+  1214→  1214→
+  1215→  1215→Build the debug APK.
+  1216→  1216→
+  1217→  1217→Validate release build configuration.
+  1218→  1218→
+  1219→  1219→Finish documentation and report limitations.
+  1220→  1220→
+  1221→  1221→22. Development workflow
+  1222→  1222→
+  1223→  1223→At the beginning:
+  1224→  1224→
+  1225→  1225→Inspect the existing project and tools.
+  1226→  1226→
+  1227→  1227→Identify the current build status.
+  1228→  1228→
+  1229→  1229→Read existing code before replacing anything.
+  1230→  1230→
+  1231→  1231→Verify actual provider documentation and terms.
+  1232→  1232→
+  1233→  1233→Produce a concise implementation plan and data-source matrix.
+  1234→  1234→
+  1235→  1235→Then implement the project rather than stopping after the plan.
+  1236→  1236→
+  1237→  1237→After each major phase:
+  1238→  1238→
+  1239→  1239→Run compilation and relevant tests.
+  1240→  1240→
+  1241→  1241→Fix regressions before proceeding.
+  1242→  1242→
+  1243→  1243→Update the documentation.
+  1244→  1244→
+  1245→  1245→Track completed, partially completed, blocked, and deferred features.
+  1246→  1246→
+  1247→  1247→Use actual endpoints, observed responses, and verified provider documentation. Do not invent API routes, credentials, market values, licensing permissions, or test results.
+  1248→  1248→
+  1249→  1249→Do not ask the user to approve every routine engineering decision. Make sensible defaults and document consequential choices. Ask for clarification only when a genuine blocker requires a decision that cannot safely be inferred.
+  1250→  1250→
+  1251→  1251→23. Definition of done
+  1252→  1252→
+  1253→  1253→The project is complete only when:
+  1254→  1254→
+  1255→  1255→The app is a native Kotlin/Compose Android application.
+  1256→  1256→
+  1257→  1257→Persian and English both work.
+  1258→  1258→
+  1259→  1259→The default home screen is minimal and customizable.
+  1260→  1260→
+  1261→  1261→At least one legitimate live data integration works end to end.
+  1262→  1262→
+  1263→  1263→Every displayed price has source and freshness metadata.
+  1264→  1264→
+  1265→  1265→All implemented market categories have meaningful loading, error, empty, and unavailable states.
+  1266→  1266→
+  1267→  1267→Charts use actual historical data.
+  1268→  1268→
+  1269→  1269→Currency and gold calculations are tested.
+  1270→  1270→
+  1271→  1271→Favorites persist across restarts.
+  1272→  1272→
+  1273→  1273→Offline cached data is correctly marked as stale.
+  1274→  1274→
+  1275→  1275→Actual Android widgets install, configure, update, and open the relevant screens.
+  1276→  1276→
+  1277→  1277→Alerts persist, trigger correctly from available data, and prevent duplicates.
+  1278→  1278→
+  1279→  1279→Refresh scheduling respects Android constraints and provider quotas.
+  1280→  1280→
+  1281→  1281→No fake data is presented as live data.
+  1282→  1282→
+  1283→  1283→No unauthorized scraping is silently enabled.
+  1284→  1284→
+  1285→  1285→Automated checks are executed and their results documented.
+  1286→  1286→
+  1287→  1287→The source project and APK build instructions are delivered.
+  1288→  1288→
+  1289→  1289→All deferred features and external dependencies are clearly disclosed.
+  1290→  1290→
+  1291→  1291→Final product vision: «چقدر؟» should feel like a polished Android finance utility: fast to open, easy to understand, minimal by default, customizable for power users, useful offline, and honest about where every price comes from.
+  1292→  1292→
+  1293→  1293→
