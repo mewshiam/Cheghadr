@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: bunx prisma generate
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build production bundle
+        run: bun run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Package standalone server
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          cd .next/standalone
+          zip -qr "../cheghadr-${TAG_NAME}-standalone.zip" .
+          cd ..
+          mv cheghadr-"${TAG_NAME}"-standalone.zip ../
+          cd ..
+          sha256sum "cheghadr-${TAG_NAME}-standalone.zip" > "cheghadr-${TAG_NAME}-standalone.zip.sha256"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            cheghadr-*-standalone.zip
+            cheghadr-*-standalone.zip.sha256
