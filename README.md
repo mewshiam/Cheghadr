@@ -12,10 +12,13 @@ age.** No invented numbers, no silent scraping, no fake fallbacks.
 - **Honest data**: live, keyless sources (CoinPaprika, open.er-api, Frankfurter,
   gold-api.com) plus an opt-in, user-configured TGJU-compatible source for the
   Iranian free market.
+- **Customizable dashboard**: reorder/hide sections, pin featured assets,
+  compact or comfortable density, optional mini charts — all persisted locally.
 - **Useful offline**: Room-cached quotes render instantly and are marked stale;
   favorites, alerts and settings persist locally.
 - **Android-native extras**: home-screen widgets (Glance), price alerts with
-  quiet hours, WorkManager-backed sync with exponential backoff.
+  quiet hours, WorkManager-backed sync with exponential backoff, CSV/JSON
+  export of portfolio, history and backups (no secrets ever leave the device).
 
 ```
 …خانه ── بازارها ── دیده‌بان ── مبدل ── بیشتر…

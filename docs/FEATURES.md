@@ -1,11 +1,18 @@
 # Features — implemented vs. deferred
 
-## Implemented (v1.0.0)
+## Implemented (v1.1.0)
 
 ### Core market experience
-- **Home dashboard** — app identity header, market status + last successful
-  refresh, featured prices (falls back to a sensible default set), daily
-  absolute/percentage changes, watchlist preview, quick converter access.
+- **Home dashboard (customizable, blueprint §7)** — app identity header, market
+  status + last successful refresh, featured prices, daily absolute/percentage
+  changes, watchlist preview, quick converter access. The layout is fully
+  user-configurable: sections can be shown/hidden and reordered, featured
+  assets can be pinned manually (searchable picker, max 8) or left automatic
+  (watchlist-first), density is compact/comfortable, mini sparkline charts
+  (from this device's recorded observations) and change badges can be toggled,
+  and the whole layout can be reset to defaults. Everything persists locally.
+- **Optional Top-movers overview** — biggest 24h gainers/losers among available
+  assets, hidden by default, enable it from dashboard customization.
 - **Markets explorer** — category tabs (ارز، طلا، سکه، رمزارز، بورس، کالا),
   pull-to-refresh, loading/empty/error/unavailable states per category,
   honest "needs an authorized source" cards for TGJU-gated markets.
@@ -26,6 +33,12 @@
   conversions, coin intrinsic values from published specs, optional making
   charge/tax/discount inputs with an explicit "estimate" label and visible
   breakdown (market price kept separate from retail estimate).
+
+- **Search, favorites & sharing** — universal search with history, favorites,
+  native share sheet with source disclosure, plus **CSV export** of portfolio
+  transactions and of the displayed price history (with a `source` column),
+  and a **local backup export** (settings + watchlist + dashboard layout as
+  JSON — API keys and custom endpoint URLs are never included).
 
 ### Android integration
 - **Widgets** (Glance): single-price widget + multi-asset watchlist widget;
@@ -62,8 +75,8 @@
 |---|---|---|
 | Mini-chart & converter widgets | deferred | two solid widget types first; chart-in-widget adds size/complexity |
 | Multiple named watchlists | deferred | single watchlist covers the core use case |
-| CSV / image export | deferred (text share works) | share-with-source implemented; CSV export is next in line |
-| Settings/watchlist backup import-export | deferred | needs a stable format decision |
+| Backup *import* (restore) | deferred | export implemented in v1.1.0; import needs format-versioning UX |
+| Price-card **image** export | deferred (CSV + text share work) | needs canvas capture pipeline |
 | Provider comparison view | partial | provider health visible in Settings; side-by-side quote comparison not built |
 | OHLC/candlestick charts | deferred | no integrated source currently exposes genuine OHLC data |
 | Backend ingestion for TGJU | not built | requires authorization per TGJU terms; device-side opt-in endpoint instead |
