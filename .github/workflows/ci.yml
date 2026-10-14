@@ -29,13 +29,14 @@ jobs:
         with:
           cache-read-only: false
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
+      # ubuntu-latest ships a preinstalled Android SDK (ANDROID_HOME +
+      # cmdline-tools); we only ensure the exact platform/build-tools we need.
       - name: Install Android SDK packages
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platforms;android-35" "build-tools;34.0.0" > /dev/null
+          SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+          [ -x "$SDKMANAGER" ] || SDKMANAGER="$(command -v sdkmanager)"
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;34.0.0" > /dev/null
 
       - name: Unit tests
         run: ./gradlew test --stacktrace
