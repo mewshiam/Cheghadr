@@ -22,4 +22,5 @@
     <string name="portfolio_no_price">قیمت فعلی در دسترس نیست</string>
     <string name="portfolio_disclaimer">این محاسبات صرفاً اطلاعاتی است و توصیهٔ سرمایه‌گذاری نیست. داده‌ها فقط روی همین دستگاه می‌مانند.</string>
     <string name="portfolio_invalid">مقادیر واردشده نامعتبرند.</string>
+    <string name="portfolio_export">خروجی CSV تراکنش‌ها</string>
 </resources>

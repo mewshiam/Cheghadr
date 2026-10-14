@@ -41,4 +41,7 @@
     <string name="settings_sources">منابع و اعتبار داده‌ها</string>
     <string name="settings_version">نسخه %1$s</string>
     <string name="settings_apply_note">برای اعمال کامل زبان، برنامه یک‌بار باز و بسته شود.</string>
+    <string name="settings_backup">پشتیبان‌گیری محلی</string>
+    <string name="settings_backup_hint">تنظیمات، دیده‌بان و چیدمان داشبورد به‌صورت JSON؛ بدون کلیدهای API.</string>
+    <string name="settings_backup_export">خروجی پشتیبان</string>
 </resources>

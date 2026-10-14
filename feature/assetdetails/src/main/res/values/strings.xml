@@ -26,4 +26,5 @@
     <string name="detail_range_1y">۱ سال</string>
     <string name="detail_range_5y">۵ سال</string>
     <string name="detail_range_max">حداکثر</string>
+    <string name="detail_export_csv">خروجی CSV تاریخ قیمت</string>
 </resources>

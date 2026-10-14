@@ -22,4 +22,5 @@
     <string name="portfolio_no_price">Current price unavailable</string>
     <string name="portfolio_disclaimer">For information only — not investment advice. Data stays on this device.</string>
     <string name="portfolio_invalid">Invalid values entered.</string>
+    <string name="portfolio_export">Export transactions as CSV</string>
 </resources>

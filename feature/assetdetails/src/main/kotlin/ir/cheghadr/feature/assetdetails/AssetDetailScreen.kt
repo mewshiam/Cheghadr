@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
@@ -114,6 +115,12 @@ fun AssetDetailScreen(
                         Icon(
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.detail_share),
+                        )
+                    }
+                    IconButton(onClick = { viewModel.exportChartCsv() }) {
+                        Icon(
+                            imageVector = Icons.Default.IosShare,
+                            contentDescription = stringResource(R.string.detail_export_csv),
                         )
                     }
                 },

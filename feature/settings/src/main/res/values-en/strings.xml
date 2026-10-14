@@ -41,4 +41,7 @@
     <string name="settings_sources">Data sources &amp; attribution</string>
     <string name="settings_version">Version %1$s</string>
     <string name="settings_apply_note">Restart the app once to fully apply the language.</string>
+    <string name="settings_backup">Local backup</string>
+    <string name="settings_backup_hint">Settings, watchlist and dashboard layout as JSON; API keys are never included.</string>
+    <string name="settings_backup_export">Export backup</string>
 </resources>

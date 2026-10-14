@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,7 +57,22 @@ fun PortfolioScreen(
     var dialogOpen by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.portfolio_title)) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.portfolio_title)) },
+                actions = {
+                    IconButton(
+                        onClick = { viewModel.exportCsv() },
+                        enabled = state.transactions.isNotEmpty(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.IosShare,
+                            contentDescription = stringResource(R.string.portfolio_export),
+                        )
+                    }
+                },
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { dialogOpen = true }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.portfolio_add))

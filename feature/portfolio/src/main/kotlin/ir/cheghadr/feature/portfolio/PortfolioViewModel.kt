@@ -3,7 +3,9 @@ package ir.cheghadr.feature.portfolio
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.cheghadr.core.common.Csv
 import ir.cheghadr.core.common.DisplaySettings
+import ir.cheghadr.core.data.export.ExportSharer
 import ir.cheghadr.core.data.preferences.SettingsRepository
 import ir.cheghadr.core.data.repo.AssetWithQuote
 import ir.cheghadr.core.data.repo.MarketRepository
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -46,6 +49,7 @@ class PortfolioViewModel @Inject constructor(
     private val portfolioRepository: PortfolioRepository,
     private val marketRepository: MarketRepository,
     private val settingsRepository: SettingsRepository,
+    private val exportSharer: ExportSharer,
 ) : ViewModel() {
 
     data class Draft(
@@ -126,5 +130,45 @@ class PortfolioViewModel @Inject constructor(
 
     fun delete(id: Long) {
         viewModelScope.launch { portfolioRepository.delete(id) }
+    }
+
+    /**
+     * CSV export of the local transaction history (blueprint §15). Values are
+     * exported verbatim (BigDecimal.toPlainString) — never re-rounded.
+     */
+    fun exportCsv() {
+        viewModelScope.launch {
+            val transactions = portfolioRepository
+                .observeTransactions()
+                .first()
+                .sortedBy { it.timestamp }
+            if (transactions.isEmpty()) return@launch
+            val assets = marketRepository.observeAvailable().first()
+                .associateBy { it.asset.id }
+            val csv = Csv.build(
+                header = listOf(
+                    "id", "timestamp_iso", "timestamp_epoch_ms", "asset_id",
+                    "asset_symbol", "side", "quantity", "price_per_unit", "fee", "note",
+                ),
+                rows = transactions.map { t ->
+                    listOf(
+                        t.id.toString(),
+                        java.time.Instant.ofEpochMilli(t.timestamp).toString(),
+                        t.timestamp.toString(),
+                        t.assetId,
+                        assets[t.assetId]?.asset?.symbol ?: "",
+                        t.side.name,
+                        t.quantity.toPlainString(),
+                        t.pricePerUnit.toPlainString(),
+                        t.fee.toPlainString(),
+                        t.note ?: "",
+                    )
+                },
+            )
+            val fileName = "cheghadr-portfolio-${System.currentTimeMillis()}.csv"
+            if (!exportSharer.shareFile(fileName, "text/csv", csv, "Cheghadr — portfolio")) {
+                exportSharer.shareText(csv, "Cheghadr — portfolio")
+            }
+        }
     }
 }

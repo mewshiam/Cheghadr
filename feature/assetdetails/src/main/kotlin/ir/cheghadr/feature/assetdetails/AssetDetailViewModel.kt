@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.cheghadr.core.common.Csv
 import ir.cheghadr.core.common.DisplaySettings
+import ir.cheghadr.core.data.export.ExportSharer
 import ir.cheghadr.core.data.preferences.SettingsRepository
 import ir.cheghadr.core.data.repo.AssetWithQuote
 import ir.cheghadr.core.data.repo.ChartData
@@ -47,6 +49,7 @@ class AssetDetailViewModel @Inject constructor(
     private val marketRepository: MarketRepository,
     private val favoritesRepository: FavoritesRepository,
     private val settingsRepository: SettingsRepository,
+    private val exportSharer: ExportSharer,
 ) : ViewModel() {
 
     val assetId: String = savedStateHandle.get<String>("assetId") ?: ""
@@ -117,5 +120,39 @@ class AssetDetailViewModel @Inject constructor(
         return "${asset.nameFa}: ${ir.cheghadr.core.common.PriceDisplay.priceNumber(asset, quote, settings)} " +
             "(${ir.cheghadr.core.common.PriceDisplay.changeLabel(quote, settings) ?: "–"}) — " +
             "via «چقدر؟» from $providerName"
+    }
+
+    /**
+     * CSV export of the currently displayed series (blueprint §15). Only real
+     * points are exported — provider history or this device's observations,
+     * with a `source` column disclosing which. Nothing is interpolated.
+     */
+    fun exportChartCsv() {
+        viewModelScope.launch {
+            val asset = marketRepository.getAsset(assetId) ?: return@launch
+            val (points, source) = when (val data = chart.value.data) {
+                is ChartData.ProviderSeries -> data.points to "provider:${data.providerId.name.lowercase()}"
+                is ChartData.LocalSeries -> data.points to "local-observations"
+                ChartData.Insufficient -> emptyList<HistoryPoint>() to "none"
+            }
+            if (points.isEmpty()) return@launch
+            val csv = Csv.build(
+                header = listOf("asset_id", "timestamp_iso", "timestamp_epoch_ms", "price", "source"),
+                rows = points.map { p ->
+                    listOf(
+                        asset.id,
+                        java.time.Instant.ofEpochMilli(p.timestamp).toString(),
+                        p.timestamp.toString(),
+                        p.price.toPlainString(),
+                        source,
+                    )
+                },
+            )
+            val safeId = asset.id.replace(Regex("[^A-Za-z0-9._-]"), "_")
+            val fileName = "cheghadr-history-$safeId-${System.currentTimeMillis()}.csv"
+            if (!exportSharer.shareFile(fileName, "text/csv", csv, "Cheghadr — history")) {
+                exportSharer.shareText(csv, "Cheghadr — history")
+            }
+        }
     }
 }

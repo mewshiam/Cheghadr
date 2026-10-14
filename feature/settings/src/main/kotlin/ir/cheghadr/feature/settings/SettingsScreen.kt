@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -141,6 +142,18 @@ fun SettingsScreen(
                             label = { Text(stringResource(label), maxLines = 1) },
                         )
                     }
+                }
+                // Local backup export (blueprint §15) — no secrets included.
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(stringResource(R.string.settings_backup), style = MaterialTheme.typography.titleSmall)
+                Text(
+                    text = stringResource(R.string.settings_backup_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                OutlinedButton(onClick = { viewModel.exportBackup() }) {
+                    Text(stringResource(R.string.settings_backup_export))
                 }
             }
 
