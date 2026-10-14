@@ -198,6 +198,20 @@ class MarketRepository @Inject constructor(
             assetId,
             System.currentTimeMillis() - sinceDays * 86_400_000L,
         ).map { list -> list.map { it.toModel() } }
+
+    /**
+     * Mini-chart data (blueprint §7): the device's own recorded observations
+     * for the given assets, newest last. Never fabricates points — assets
+     * without at least two observations are simply absent from the map.
+     */
+    suspend fun recentSparklines(assetIds: Collection<String>, sinceDays: Int = 30): Map<String, List<Double>> {
+        if (assetIds.isEmpty()) return emptyMap()
+        val since = System.currentTimeMillis() - sinceDays * 86_400_000L
+        return historyDao.getSinceForIds(assetIds.toList(), since)
+            .groupBy({ it.assetId }, { it.price })
+            .mapValues { (_, prices) -> prices.mapNotNull { it.toDoubleOrNull() } }
+            .filterValues { it.size >= 2 }
+    }
 }
 
 /** Favorites / watchlist management. Favorites persist across restarts. */

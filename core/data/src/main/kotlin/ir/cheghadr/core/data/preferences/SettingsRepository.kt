@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ir.cheghadr.core.common.AppLanguage
+import ir.cheghadr.core.common.DashboardConfig
 import ir.cheghadr.core.common.DigitStyle
 import ir.cheghadr.core.common.ThemeMode
 import kotlinx.coroutines.flow.Flow
@@ -62,6 +63,7 @@ class SettingsRepository @Inject constructor(
         val TGJU_ENABLED = booleanPreferencesKey("tgju_enabled")
         val TGJU_URL = stringPreferencesKey("tgju_url")
         val CG_KEY = stringPreferencesKey("cg_key")
+        val DASHBOARD = stringPreferencesKey("dashboard_config")
     }
 
     val settings: Flow<UserSettings> = context.userPrefsDataStore.data.map { p ->
@@ -83,6 +85,14 @@ class SettingsRepository @Inject constructor(
             coingeckoApiKey = p[Keys.CG_KEY] ?: "",
         )
     }
+
+    /** User's dashboard layout (blueprint §7), always normalized on read. */
+    val dashboardConfig: Flow<DashboardConfig> = context.userPrefsDataStore.data.map { p ->
+        DashboardConfig.normalize(DashboardConfig.decodeOrNull(p[Keys.DASHBOARD]))
+    }
+
+    suspend fun setDashboardConfig(config: DashboardConfig) =
+        edit { it[Keys.DASHBOARD] = DashboardConfig.encode(config) }
 
     suspend fun setLanguage(language: AppLanguage) = edit { it[Keys.LANGUAGE] = language.name }
 

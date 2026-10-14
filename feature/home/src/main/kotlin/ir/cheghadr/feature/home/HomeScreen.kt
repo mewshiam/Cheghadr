@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.cheghadr.core.common.AppLanguage
+import ir.cheghadr.core.common.DashboardSection
 import ir.cheghadr.core.common.TimeFormat
 import ir.cheghadr.core.common.PriceDisplay
 import ir.cheghadr.core.common.FreshnessClassifier
@@ -41,14 +43,13 @@ import ir.cheghadr.core.designsystem.ChangeBadge
 import ir.cheghadr.core.designsystem.EmptyState
 import ir.cheghadr.core.designsystem.MarketRow
 import ir.cheghadr.core.designsystem.SectionHeader
+import ir.cheghadr.core.designsystem.Sparkline
 import ir.cheghadr.core.model.DataFreshness
-import ir.cheghadr.core.model.PriceUnit
-import java.time.Instant
-import java.time.ZoneId
 
 /**
- * Home dashboard: minimal by default, personalized through the watchlist.
- * Renders cached data immediately; the header exposes refresh and search.
+ * Home dashboard: minimal by default, fully customizable per blueprint §7.
+ * Sections render in the user's chosen order and density; mini charts use
+ * this device's own recorded observations (labeled, never fabricated).
  */
 @Composable
 fun HomeScreen(
@@ -56,15 +57,15 @@ fun HomeScreen(
     onOpenSearch: () -> Unit,
     onOpenConverter: () -> Unit,
     onOpenWatchlist: () -> Unit,
+    onOpenCustomize: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val persian = state.settings.language == AppLanguage.PERSIAN
 
     LaunchedEffect(Unit) { viewModel.refresh() }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Compact header with app identity, search and refresh.
+        // Compact header with app identity, search, customize and refresh.
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,6 +82,12 @@ fun HomeScreen(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(R.string.home_search),
+                )
+            }
+            IconButton(onClick = onOpenCustomize) {
+                Icon(
+                    imageVector = Icons.Default.Tune,
+                    contentDescription = stringResource(R.string.home_customize),
                 )
             }
             IconButton(onClick = { viewModel.refresh() }) {
@@ -104,7 +111,7 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(bottom = 24.dp),
         ) {
-            StatusLine(state = state, persian = persian)
+            StatusLine(state = state)
 
             if (!state.hasData && state.featured.isNotEmpty() && state.featured.all { it.quote == null }) {
                 EmptyState(
@@ -119,43 +126,27 @@ fun HomeScreen(
                 ) { Text(stringResource(R.string.home_retry)) }
             }
 
-            SectionHeader(
-                title = stringResource(R.string.home_featured),
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-            FeaturedGrid(
-                items = state.featured,
-                settings = state.settings,
-                onOpenAsset = onOpenAsset,
-            )
+            state.sections.forEach { section ->
+                when (section) {
+                    DashboardSection.FEATURED -> FeaturedSection(
+                        state = state,
+                        onOpenAsset = onOpenAsset,
+                    )
 
-            // Quick converter card.
-            val usd = state.featured.firstOrNull { it.asset.unit == PriceUnit.RIAL && it.asset.symbol == "USD" }
-            if (usd?.quote != null) {
-                QuickConverterCard(
-                    usd = usd,
-                    state = state,
-                    persian = persian,
-                    onOpenConverter = onOpenConverter,
-                )
-            }
+                    DashboardSection.QUICK_CONVERTER -> QuickConverterSection(
+                        state = state,
+                        onOpenConverter = onOpenConverter,
+                    )
+                    DashboardSection.WATCHLIST_PREVIEW -> WatchlistSection(
+                        state = state,
+                        onOpenAsset = onOpenAsset,
+                        onOpenWatchlist = onOpenWatchlist,
+                    )
 
-            SectionHeader(
-                title = stringResource(R.string.home_watchlist),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                actionText = stringResource(R.string.home_manage),
-                onAction = onOpenWatchlist,
-            )
-            if (state.watchlistPreview.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.home_watchlist_empty),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
-                )
-            } else {
-                state.watchlistPreview.forEach { item ->
-                    WatchlistRow(item = item, state = state, persian = persian, onOpenAsset = onOpenAsset)
+                    DashboardSection.MARKET_OVERVIEW -> MarketOverviewSection(
+                        state = state,
+                        onOpenAsset = onOpenAsset,
+                    )
                 }
             }
         }
@@ -163,7 +154,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun StatusLine(state: HomeUiState, persian: Boolean) {
+private fun StatusLine(state: HomeUiState) {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -172,7 +163,7 @@ private fun StatusLine(state: HomeUiState, persian: Boolean) {
             state.refreshing -> stringResource(R.string.home_updating)
             state.lastSyncAt != null -> stringResource(
                 R.string.home_last_update,
-                TimeFormat.formatDateTime(state.lastSyncAt, persian),
+                TimeFormat.formatDateTime(state.lastSyncAt, persian = state.settings.language == AppLanguage.PERSIAN),
             )
             else -> stringResource(R.string.home_never_updated)
         }
@@ -187,29 +178,53 @@ private fun StatusLine(state: HomeUiState, persian: Boolean) {
 }
 
 @Composable
-private fun FeaturedGrid(
-    items: List<AssetWithQuote>,
-    settings: ir.cheghadr.core.common.DisplaySettings,
+private fun FeaturedSection(
+    state: HomeUiState,
     onOpenAsset: (String) -> Unit,
 ) {
+    SectionHeader(
+        title = stringResource(R.string.home_featured),
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+    FeaturedGrid(
+        items = state.featured,
+        state = state,
+        onOpenAsset = onOpenAsset,
+    )
+}
+
+@Composable
+private fun FeaturedGrid(
+    items: List<AssetWithQuote>,
+    state: HomeUiState,
+    onOpenAsset: (String) -> Unit,
+) {
+    val cardPadding = if (state.compact) 10.dp else 14.dp
+    val corner = if (state.compact) 14.dp else 18.dp
+    val vertical = if (state.compact) 2.dp else 4.dp
+
     items.chunked(2).forEach { rowItems ->
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
+                .padding(horizontal = 16.dp, vertical = vertical),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             rowItems.forEach { item ->
                 Surface(
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(18.dp),
+                    shape = RoundedCornerShape(corner),
                     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
                     onClick = { onOpenAsset(item.asset.id) },
                 ) {
-                    Column(modifier = Modifier.padding(14.dp)) {
+                    Column(modifier = Modifier.padding(cardPadding)) {
                         Text(
-                            text = PriceDisplay.assetName(item.asset, settings),
-                            style = MaterialTheme.typography.titleSmall,
+                            text = PriceDisplay.assetName(item.asset, state.settings),
+                            style = if (state.compact) {
+                                MaterialTheme.typography.bodyMedium
+                            } else {
+                                MaterialTheme.typography.titleSmall
+                            },
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -218,14 +233,18 @@ private fun FeaturedGrid(
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(if (state.compact) 4.dp else 8.dp))
                         Row(verticalAlignment = Alignment.Bottom) {
                             Text(
-                                text = PriceDisplay.priceNumber(item.asset, item.quote, settings) ?: "—",
-                                style = MaterialTheme.typography.headlineSmall,
+                                text = PriceDisplay.priceNumber(item.asset, item.quote, state.settings) ?: "—",
+                                style = if (state.compact) {
+                                    MaterialTheme.typography.titleLarge
+                                } else {
+                                    MaterialTheme.typography.headlineSmall
+                                },
                                 color = MaterialTheme.colorScheme.primary,
                             )
-                            val unit = PriceDisplay.unitWord(item.asset, settings)
+                            val unit = PriceDisplay.unitWord(item.asset, state.settings)
                             if (unit.isNotEmpty()) {
                                 Text(
                                     text = " $unit",
@@ -235,10 +254,27 @@ private fun FeaturedGrid(
                                 )
                             }
                         }
-                        val change = PriceDisplay.changeLabel(item.quote, settings)
-                        if (change != null) {
-                            Spacer(modifier = Modifier.height(6.dp))
-                            ChangeBadge(changeText = change, isUp = PriceDisplay.changeIsUp(item.quote))
+                        if (state.dashboard.showChanges) {
+                            val change = PriceDisplay.changeLabel(item.quote, state.settings)
+                            if (change != null) {
+                                Spacer(modifier = Modifier.height(6.dp))
+                                ChangeBadge(
+                                    changeText = change,
+                                    isUp = PriceDisplay.changeIsUp(item.quote),
+                                )
+                            }
+                        }
+                        // Optional mini chart from local observations (§7).
+                        if (state.dashboard.showMiniCharts) {
+                            state.sparklines[item.asset.id]?.let { points ->
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Sparkline(
+                                    values = points,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(if (state.compact) 18.dp else 26.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -251,12 +287,14 @@ private fun FeaturedGrid(
 }
 
 @Composable
-private fun QuickConverterCard(
-    usd: AssetWithQuote,
+private fun QuickConverterSection(
     state: HomeUiState,
-    persian: Boolean,
     onOpenConverter: () -> Unit,
 ) {
+    // Official USD in rial, wherever it currently lives (not just featured).
+    val usd = state.usdOfficial ?: return
+    if (usd.quote == null) return
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -302,10 +340,97 @@ private fun QuickConverterCard(
 }
 
 @Composable
+private fun WatchlistSection(
+    state: HomeUiState,
+    onOpenAsset: (String) -> Unit,
+    onOpenWatchlist: () -> Unit,
+) {
+    SectionHeader(
+        title = stringResource(R.string.home_watchlist),
+        modifier = Modifier.padding(horizontal = 16.dp),
+        actionText = stringResource(R.string.home_manage),
+        onAction = onOpenWatchlist,
+    )
+    if (state.watchlistPreview.isEmpty()) {
+        Text(
+            text = stringResource(R.string.home_watchlist_empty),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        )
+    } else {
+        state.watchlistPreview.forEach { item ->
+            WatchlistRow(
+                item = item,
+                state = state,
+                showChanges = state.dashboard.showChanges,
+                onOpenAsset = onOpenAsset,
+            )
+        }
+    }
+}
+
+/** Market overview (§7 "optional market overview"): top 24h movers, honest. */
+@Composable
+private fun MarketOverviewSection(
+    state: HomeUiState,
+    onOpenAsset: (String) -> Unit,
+) {
+    SectionHeader(
+        title = stringResource(R.string.home_top_movers),
+        modifier = Modifier.padding(horizontal = 16.dp),
+    )
+    if (state.topGainers.isEmpty() && state.topLosers.isEmpty()) {
+        Text(
+            text = stringResource(R.string.home_top_movers_empty),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        )
+        return
+    }
+    state.topGainers.forEach { item ->
+        MoverRow(item = item, state = state, onOpenAsset = onOpenAsset)
+    }
+    state.topLosers.forEach { item ->
+        if (item.asset.id !in state.topGainers.map { it.asset.id }) {
+            MoverRow(item = item, state = state, onOpenAsset = onOpenAsset)
+        }
+    }
+    Text(
+        text = stringResource(R.string.home_top_movers_note),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+    )
+}
+
+@Composable
+private fun MoverRow(
+    item: AssetWithQuote,
+    state: HomeUiState,
+    onOpenAsset: (String) -> Unit,
+) {
+    MarketRow(
+        name = PriceDisplay.assetName(item.asset, state.settings),
+        symbol = item.asset.symbol,
+        priceText = PriceDisplay.priceNumber(item.asset, item.quote, state.settings),
+        unitWord = PriceDisplay.unitWord(item.asset, state.settings),
+        changeText = if (state.dashboard.showChanges) {
+            PriceDisplay.changeLabel(item.quote, state.settings)
+        } else {
+            null
+        },
+        changeUp = PriceDisplay.changeIsUp(item.quote),
+        onClick = { onOpenAsset(item.asset.id) },
+    )
+}
+
+@Composable
 private fun WatchlistRow(
     item: AssetWithQuote,
     state: HomeUiState,
-    persian: Boolean,
+    showChanges: Boolean,
     onOpenAsset: (String) -> Unit,
 ) {
     val fresh = FreshnessClassifier.classify(
@@ -324,7 +449,7 @@ private fun WatchlistRow(
         symbol = item.asset.symbol,
         priceText = PriceDisplay.priceNumber(item.asset, item.quote, state.settings),
         unitWord = PriceDisplay.unitWord(item.asset, state.settings),
-        changeText = PriceDisplay.changeLabel(item.quote, state.settings),
+        changeText = if (showChanges) PriceDisplay.changeLabel(item.quote, state.settings) else null,
         changeUp = PriceDisplay.changeIsUp(item.quote),
         onClick = { onOpenAsset(item.asset.id) },
         staleLabel = staleLabel,

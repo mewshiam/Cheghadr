@@ -69,6 +69,9 @@ interface HistoryDao {
     @Query("SELECT * FROM history WHERE assetId = :assetId AND timestamp >= :since ORDER BY timestamp")
     suspend fun getSince(assetId: String, since: Long): List<HistoryEntity>
 
+    @Query("SELECT * FROM history WHERE assetId IN (:assetIds) AND timestamp >= :since ORDER BY timestamp")
+    suspend fun getSinceForIds(assetIds: List<String>, since: Long): List<HistoryEntity>
+
     @Query("SELECT MAX(timestamp) FROM history WHERE assetId = :assetId")
     suspend fun lastSampleTime(assetId: String): Long?
 

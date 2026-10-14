@@ -35,6 +35,7 @@ import ir.cheghadr.app.R
 import ir.cheghadr.feature.alerts.AlertsScreen
 import ir.cheghadr.feature.assetdetails.AssetDetailScreen
 import ir.cheghadr.feature.converter.ConverterScreen
+import ir.cheghadr.feature.home.CustomizeDashboardScreen
 import ir.cheghadr.feature.home.HomeScreen
 import ir.cheghadr.feature.markets.MarketsScreen
 import ir.cheghadr.feature.markets.SearchScreen
@@ -51,6 +52,7 @@ object Routes {
     const val MORE = "more"
     const val SEARCH = "search"
     const val SETTINGS = "settings"
+    const val DASHBOARD_EDIT = "dashboard-edit"
     const val ALERTS = "alerts?assetId={assetId}"
     const val PORTFOLIO = "portfolio"
     const val ASSET_DETAIL = "asset/{assetId}"
@@ -135,6 +137,7 @@ fun CheghadrApp(pendingAssetId: kotlinx.coroutines.flow.MutableStateFlow<String?
                     onOpenSearch = { navController.navigate(Routes.SEARCH) },
                     onOpenConverter = { navController.navigate(Routes.CONVERTER) },
                     onOpenWatchlist = { navController.navigate(Routes.WATCHLIST) },
+                    onOpenCustomize = { navController.navigate(Routes.DASHBOARD_EDIT) },
                 )
             }
             composable(Routes.MARKETS) {
@@ -166,6 +169,11 @@ fun CheghadrApp(pendingAssetId: kotlinx.coroutines.flow.MutableStateFlow<String?
             }
             composable(Routes.SETTINGS) {
                 SettingsScreen()
+            }
+            composable(Routes.DASHBOARD_EDIT) {
+                CustomizeDashboardScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
             composable(
                 route = Routes.ALERTS,
