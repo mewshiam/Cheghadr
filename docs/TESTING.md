@@ -8,7 +8,7 @@
 ./gradlew assembleRelease # BUILD SUCCESSFUL → app-release-unsigned.apk (R8)
 ```
 
-**142 unit tests, 0 failures, 0 errors, 0 skipped** across 22 test classes
+**94 unit tests, 0 failures, 0 errors, 0 skipped** across 11 test classes
 (`*:test` / `*:testDebugUnitTest` / `*:testReleaseUnitTest` reports under
 `*/build/test-results/`).
 
@@ -16,7 +16,7 @@
 |---|---|---|
 | core:model | AlertEvaluatorTest, PortfolioCalculatorTest | threshold crossings, cooldown suppression, re-arming, average cost, realized/unrealized P/L, partial sells |
 | core:common | JalaliCalendarTest, MoneyFormatterTest, PriceDisplayTest, FreshnessClassifierTest | calendar round-trips vs. known dates, digit localization/separators, toman conversion, price/change rendering, freshness thresholds |
-| core:data | ProviderParsingTest, CoinPaprikaParsingTest, GoldApiParsingTest, QuoteNormalizerTest, AssetCatalogTest | **live-observed fixtures** for every provider parser; validation rules (bad prices/changes/timestamps rejected); catalog invariants (unique ids, provider coverage, TGJU ships unavailable) |
+| core:data | ProviderParsingTest, QuoteNormalizerTest | live-observed fixtures for every provider parser; validation rules (bad prices/changes/timestamps rejected) |
 | feature:converter | CurrencyConverterTest, GoldCalculatorTest | exact BigDecimal conversion chains (IRR cross-rates, crypto, inverse pairs), mithqal/ounce weights, purity conversion, coin specs |
 | app | QuietHoursTest | quiet-hours window logic incl. overnight windows |
 

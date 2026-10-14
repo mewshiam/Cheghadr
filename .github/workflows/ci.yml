@@ -4,6 +4,11 @@ on:
   push:
     branches: [main, web-legacy]
   pull_request:
+  workflow_dispatch:
+
+# Minimum required token permissions (blueprint §20.6).
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -47,9 +52,42 @@ jobs:
       - name: Assemble debug APK
         run: ./gradlew assembleDebug --stacktrace
 
+      # Blueprint §20.3: fail visibly when no APK was produced.
+      - name: Verify APK exists
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -f "$APK" ]; then
+            echo "::error::Debug APK was not produced at $APK"
+            exit 1
+          fi
+          ls -la "$APK"
+
       - name: Upload debug APK (artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: cheghadr-debug-${{ github.sha }}
+          name: cheghadr-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload test & lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ github.sha }}
+          path: |
+            **/build/reports/tests/
+            **/build/intermediates/lint-report*/
+            **/build/reports/lint-results*.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## CI summary"
+            echo "- commit: \`${GITHUB_SHA}\`"
+            echo "- run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- artifact: \`cheghadr-debug-apk\` (retained 14 days)"
+          } >> "$GITHUB_STEP_SUMMARY"

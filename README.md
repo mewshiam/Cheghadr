@@ -30,7 +30,7 @@ Requirements: **JDK 17**, **Android SDK** (platform 35, build-tools 34), git.
 git clone https://github.com/mewshiam/Cheghadr.git
 cd Cheghadr
 ./gradlew assembleDebug          # → app/build/outputs/apk/debug/app-debug.apk
-./gradlew test                   # 142 unit tests
+./gradlew test                   # unit tests (exact count: docs/TESTING.md)
 ./gradlew assembleRelease        # unsigned release APK (R8-minified)
 ```
 
