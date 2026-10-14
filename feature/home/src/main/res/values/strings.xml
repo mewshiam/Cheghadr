@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">چقدر؟</string>
+    <string name="home_last_update">آخرین به‌روزرسانی: %1$s</string>
+    <string name="home_never_updated">هنوز به‌روزرسانی نشده</string>
+    <string name="home_updating">در حال به‌روزرسانی…</string>
+    <string name="home_refresh">به‌روزرسانی</string>
+    <string name="home_search">جست‌وجو</string>
+    <string name="home_featured">قیمت‌های منتخب</string>
+    <string name="home_watchlist">دیده‌بان</string>
+    <string name="home_manage">مدیریت</string>
+    <string name="home_watchlist_empty">دیده‌بان شما خالی است. از بخش بازارها دارایی اضافه کنید.</string>
+    <string name="home_quick_converter">مبدل سریع</string>
+    <string name="home_quick_converter_hint">هر دلار رسمی چند تومان؟</string>
+    <string name="home_open_converter">باز کردن مبدل</string>
+    <string name="home_no_data">هنوز داده‌ای دریافت نشده است؛ اتصال اینترنت را بررسی و دوباره تلاش کنید.</string>
+    <string name="home_retry">تلاش دوباره</string>
+</resources>

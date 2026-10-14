@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_single_label">چقدر؟ — قیمت لحظه‌ای</string>
+    <string name="widget_list_label">چقدر؟ — دیده‌بان</string>
+    <string name="widget_configure_title">انتخاب دارایی برای ویجت</string>
+    <string name="widget_configure_search_hint">جست‌وجوی دارایی…</string>
+    <string name="widget_loading">در حال بارگذاری…</string>
+    <string name="widget_no_data">داده‌ای ذخیره نشده است</string>
+    <string name="widget_stale">کهنه</string>
+    <string name="widget_select_list_hint">تا ۵ دارایی انتخاب کنید</string>
+    <string name="widget_confirm">تأیید</string>
+    <string name="widget_refresh">به‌روزرسانی</string>
+    <string name="widget_unit_toman">تومان</string>
+    <string name="widget_unit_rial">ریال</string>
+</resources>

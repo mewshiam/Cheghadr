@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="portfolio_title">Portfolio (local)</string>
+    <string name="portfolio_empty">No transactions yet. Add a buy or sell with the button below.</string>
+    <string name="portfolio_add">Add transaction</string>
+    <string name="portfolio_asset">Asset</string>
+    <string name="portfolio_side">Side</string>
+    <string name="portfolio_side_buy">Buy</string>
+    <string name="portfolio_side_sell">Sell</string>
+    <string name="portfolio_quantity">Quantity</string>
+    <string name="portfolio_price">Price per unit</string>
+    <string name="portfolio_fee">Fee</string>
+    <string name="portfolio_note">Note (optional)</string>
+    <string name="portfolio_save">Save</string>
+    <string name="portfolio_cancel">Cancel</string>
+    <string name="portfolio_delete">Delete</string>
+    <string name="portfolio_total_value">Current value</string>
+    <string name="portfolio_unrealized">Unrealized P/L</string>
+    <string name="portfolio_realized">Realized P/L</string>
+    <string name="portfolio_avg_cost">Average cost</string>
+    <string name="portfolio_quantity_label">Quantity: %1$s</string>
+    <string name="portfolio_no_price">Current price unavailable</string>
+    <string name="portfolio_disclaimer">For information only — not investment advice. Data stays on this device.</string>
+    <string name="portfolio_invalid">Invalid values entered.</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="markets_title">بازارها</string>
+    <string name="markets_tab_currency">ارزها</string>
+    <string name="markets_tab_gold">طلا</string>
+    <string name="markets_tab_coin">سکه</string>
+    <string name="markets_tab_crypto">رمزارز</string>
+    <string name="markets_tab_stock">بورس</string>
+    <string name="markets_tab_commodity">کالا</string>
+    <string name="markets_sort">مرتب‌سازی</string>
+    <string name="markets_sort_default">پیش‌فرض</string>
+    <string name="markets_sort_name">نام</string>
+    <string name="markets_sort_price">قیمت</string>
+    <string name="markets_sort_change">تغییر</string>
+    <string name="markets_sort_change_pct">درصد تغییر</string>
+    <string name="markets_refresh">به‌روزرسانی</string>
+    <string name="markets_empty">دارایی‌ای در این دسته یافت نشد.</string>
+    <string name="search_hint">جست‌وجوی دارایی…</string>
+    <string name="search_title">جست‌وجو</string>
+    <string name="search_history">جست‌وجوهای اخیر</string>
+    <string name="search_clear_history">پاک کردن تاریخچه</string>
+    <string name="search_no_results">نتیجه‌ای یافت نشد.</string>
+</resources>

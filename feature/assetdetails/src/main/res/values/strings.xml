@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detail_source">منبع: %1$s</string>
+    <string name="detail_last_update">آخرین داده: %1$s</string>
+    <string name="detail_add_alert">ایجاد هشدار</string>
+    <string name="detail_share">هم‌رسانی</string>
+    <string name="detail_favorite_add">افزودن به دیده‌بان</string>
+    <string name="detail_favorite_remove">حذف از دیده‌بان</string>
+    <string name="detail_history_title">نمودار تاریخی</string>
+    <string name="detail_history_local">نمودار بر پایهٔ داده‌های ذخیره‌شدهٔ همین دستگاه است.</string>
+    <string name="detail_history_provider">نمودار از داده‌های تاریخی %1$s.</string>
+    <string name="detail_history_insufficient">دادهٔ تاریخی کافی برای رسم نمودار وجود ندارد.</string>
+    <string name="detail_history_table">جدول تاریخچه</string>
+    <string name="detail_stats_24h_high">بیشترین ۲۴ ساعت</string>
+    <string name="detail_stats_24h_low">کمترین ۲۴ ساعت</string>
+    <string name="detail_stats_volume">حجم ۲۴ ساعت</string>
+    <string name="detail_stats_market_cap">ارزش بازار</string>
+    <string name="detail_unavailable_title">داده‌ای نمایش داده نمی‌شود</string>
+    <string name="detail_change_abs">تغییر</string>
+    <string name="detail_share_text">%1$s: %2$s (%3$s) — %4$s\nبر پایهٔ داده‌های «چقدر؟» از %5$s</string>
+    <string name="detail_range_1d">۲۴ ساعت</string>
+    <string name="detail_range_7d">۷ روز</string>
+    <string name="detail_range_30d">۳۰ روز</string>
+    <string name="detail_range_90d">۹۰ روز</string>
+    <string name="detail_range_180d">۶ ماه</string>
+    <string name="detail_range_1y">۱ سال</string>
+    <string name="detail_range_5y">۵ سال</string>
+    <string name="detail_range_max">حداکثر</string>
+</resources>

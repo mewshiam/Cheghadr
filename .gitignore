@@ -1,0 +1,36 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android / IDE
+local.properties
+.idea/
+*.iml
+captures/
+.cxx/
+*.apk.idsig
+*.dex
+*.apk
+*.aab
+*.ap_
+*.keystore
+*.jks
+!debug.keystore
+
+# Secrets — never commit credentials
+*.env
+.env
+keystore.properties
+secrets.properties
+
+# Logs / OS
+*.log
+.DS_Store
+
+# Node leftovers from the legacy web version
+node_modules/
+.next/
+
+# Kotlin 2.x session/lock dir
+.kotlin/

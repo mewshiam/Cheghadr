@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="portfolio_title">پرتفوی (محلی)</string>
+    <string name="portfolio_empty">تراکنشی ثبت نشده است. با دکمهٔ زیر خرید یا فروش اضافه کنید.</string>
+    <string name="portfolio_add">افزودن تراکنش</string>
+    <string name="portfolio_asset">دارایی</string>
+    <string name="portfolio_side">نوع</string>
+    <string name="portfolio_side_buy">خرید</string>
+    <string name="portfolio_side_sell">فروش</string>
+    <string name="portfolio_quantity">مقدار</string>
+    <string name="portfolio_price">قیمت هر واحد</string>
+    <string name="portfolio_fee">کارمزد</string>
+    <string name="portfolio_note">یادداشت (اختیاری)</string>
+    <string name="portfolio_save">ذخیره</string>
+    <string name="portfolio_cancel">انصراف</string>
+    <string name="portfolio_delete">حذف</string>
+    <string name="portfolio_total_value">ارزش فعلی</string>
+    <string name="portfolio_unrealized">سود/زیان محقق‌نشده</string>
+    <string name="portfolio_realized">سود/زیان محقق‌شده</string>
+    <string name="portfolio_avg_cost">میانگین قیمت خرید</string>
+    <string name="portfolio_quantity_label">مقدار: %1$s</string>
+    <string name="portfolio_no_price">قیمت فعلی در دسترس نیست</string>
+    <string name="portfolio_disclaimer">این محاسبات صرفاً اطلاعاتی است و توصیهٔ سرمایه‌گذاری نیست. داده‌ها فقط روی همین دستگاه می‌مانند.</string>
+    <string name="portfolio_invalid">مقادیر واردشده نامعتبرند.</string>
+</resources>

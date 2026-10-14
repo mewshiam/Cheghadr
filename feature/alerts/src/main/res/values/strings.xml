@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alerts_title">هشدارها</string>
+    <string name="alerts_empty">هشداری ندارید. از صفحهٔ جزئیات هر دارایی می‌توانید هشدار بسازید.</string>
+    <string name="alerts_add">هشدار جدید</string>
+    <string name="alerts_asset">دارایی</string>
+    <string name="alerts_type">نوع هشدار</string>
+    <string name="alerts_type_above">قیمت بالاتر از حد</string>
+    <string name="alerts_type_below">قیمت پایین‌تر از حد</string>
+    <string name="alerts_type_pct_up">درصد افزایش روزانه</string>
+    <string name="alerts_type_pct_down">درصد کاهش روزانه</string>
+    <string name="alerts_threshold">حد آستانه</string>
+    <string name="alerts_cooldown">حداقل فاصلهٔ اعلان‌ها (دقیقه)</string>
+    <string name="alerts_repeat">تکرار تا زمانی که شرط برقرار است</string>
+    <string name="alerts_allow_stale">اجازهٔ اعلان از دادهٔ کهنه</string>
+    <string name="alerts_save">ذخیره</string>
+    <string name="alerts_cancel">انصراف</string>
+    <string name="alerts_delete">حذف</string>
+    <string name="alerts_local_note">هشدارها به‌صورت محلی روی همین دستگاه بررسی می‌شوند؛ ممکن است به‌دلیل محدودیت‌های اندروید (بهینه‌سازی باتری، حالت آرام و…) با تأخیر اطلاع‌رسانی شوند. برای اعلان‌ها باید مجوز اعلان داده باشید.</string>
+    <string name="alerts_threshold_invalid">مقدار آستانه نامعتبر است.</string>
+</resources>

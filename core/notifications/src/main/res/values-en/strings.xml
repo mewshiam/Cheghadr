@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_price_alerts">Price alerts</string>
+    <string name="channel_price_alerts_desc">Notifications when prices cross your thresholds</string>
+    <string name="notif_alert_title">Price alert — %1$s</string>
+    <string name="notif_alert_above">Price crossed above %1$s (current: %2$s)</string>
+    <string name="notif_alert_below">Price dropped below %1$s (current: %2$s)</string>
+    <string name="notif_alert_pct_up">Daily change rose above %1$s%% (now: %2$s%%)</string>
+    <string name="notif_alert_pct_down">Daily change fell below %1$s%% (now: %2$s%%)</string>
+    <string name="notif_action_open">Open</string>
+    <string name="notif_action_dismiss">Dismiss</string>
+    <string name="notif_stale_note">Based on the last stored data</string>
+</resources>

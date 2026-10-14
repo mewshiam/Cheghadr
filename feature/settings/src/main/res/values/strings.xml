@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">تنظیمات</string>
+    <string name="settings_section_appearance">ظاهر</string>
+    <string name="settings_language">زبان</string>
+    <string name="settings_language_fa">فارسی</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_theme">پوسته</string>
+    <string name="settings_theme_system">هم‌گام با سیستم</string>
+    <string name="settings_theme_light">روشن</string>
+    <string name="settings_theme_dark">تیره</string>
+    <string name="settings_dynamic_colors">رنگ‌های پویا (Material You)</string>
+    <string name="settings_digits">قالب اعداد</string>
+    <string name="settings_digits_fa">فارسی (۱۲۳)</string>
+    <string name="settings_digits_latin">لاتین (123)</string>
+    <string name="settings_display_toman">نمایش مبالغ ریالی به تومان</string>
+    <string name="settings_section_data">داده و به‌روزرسانی</string>
+    <string name="settings_refresh_interval">فاصلهٔ به‌روزرسانی خودکار</string>
+    <string name="settings_refresh_15">هر ۱۵ دقیقه</string>
+    <string name="settings_refresh_30">هر ۳۰ دقیقه</string>
+    <string name="settings_refresh_60">هر ۱ ساعت</string>
+    <string name="settings_refresh_120">هر ۲ ساعت</string>
+    <string name="settings_section_notifications">اعلان‌ها</string>
+    <string name="settings_notifications">هشدارهای قیمت</string>
+    <string name="settings_quiet_hours">ساعت‌های سکوت</string>
+    <string name="settings_quiet_22_8">۲۲ تا ۸</string>
+    <string name="settings_quiet_23_7">۲۳ تا ۷</string>
+    <string name="settings_quiet_none">بدون محدودیت</string>
+    <string name="settings_section_providers">منابع داده</string>
+    <string name="settings_provider_health">وضعیت منابع</string>
+    <string name="settings_provider_ok">سالم</string>
+    <string name="settings_provider_failing">خطا (تلاش‌های ناموفق: %1$d)</string>
+    <string name="settings_provider_never">هنوز داده نگرفته</string>
+    <string name="settings_cg_key">کلید API کوین‌گکو (اختیاری، طرح Demo)</string>
+    <string name="settings_tgju_enable">فعال‌سازی منبع TGJU-compatible</string>
+    <string name="settings_tgju_url">نشانی نقطه‌پایانی (Endpoint) منبع مجاز شما</string>
+    <string name="settings_tgju_warning">هشدار: استفاده از داده‌های TGJU نیازمند رعایت شرایط استفاده و کسب مجوز لازم است. مسئولیت رعایت قوانین با شماست. پایانی وارد کنید که اسکیمای استاندارد سرویس TGJU را برگرداند.</string>
+    <string name="settings_section_about">درباره</string>
+    <string name="settings_privacy">سیاست حریم خصوصی</string>
+    <string name="settings_privacy_body">«چقدر؟» هیچ دادهٔ شخصی جمع‌آوری نمی‌کند. دیده‌بان، هشدارها، پرتفوی و تنظیمات فقط روی همین دستگاه ذخیره می‌شوند. درخواست‌های شبکه فقط برای دریافت نرخ‌های بازار از منابع عمومی (CoinGecko، ExchangeRate-API، Frankfurter و در صورت فعال‌سازی منبع TGJU شما) انجام می‌شود و کلیدهای API شما هرگز از دستگاه ارسال نمی‌شود مگر به همان سرویس.</string>
+    <string name="settings_sources">منابع و اعتبار داده‌ها</string>
+    <string name="settings_version">نسخه %1$s</string>
+    <string name="settings_apply_note">برای اعمال کامل زبان، برنامه یک‌بار باز و بسته شود.</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_title">Cheghadr?</string>
+    <string name="home_last_update">Last updated: %1$s</string>
+    <string name="home_never_updated">Not updated yet</string>
+    <string name="home_updating">Updating…</string>
+    <string name="home_refresh">Refresh</string>
+    <string name="home_search">Search</string>
+    <string name="home_featured">Featured prices</string>
+    <string name="home_watchlist">Watchlist</string>
+    <string name="home_manage">Manage</string>
+    <string name="home_watchlist_empty">Your watchlist is empty. Add assets from the Markets tab.</string>
+    <string name="home_quick_converter">Quick converter</string>
+    <string name="home_quick_converter_hint">Official USD in toman</string>
+    <string name="home_open_converter">Open converter</string>
+    <string name="home_no_data">No data received yet; check your connection and retry.</string>
+    <string name="home_retry">Retry</string>
+</resources>

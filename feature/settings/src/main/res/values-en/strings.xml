@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_fa">فارسی</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_dynamic_colors">Dynamic colors (Material You)</string>
+    <string name="settings_digits">Number format</string>
+    <string name="settings_digits_fa">Persian (۱۲۳)</string>
+    <string name="settings_digits_latin">Latin (123)</string>
+    <string name="settings_display_toman">Show rial amounts in toman</string>
+    <string name="settings_section_data">Data &amp; refresh</string>
+    <string name="settings_refresh_interval">Automatic refresh interval</string>
+    <string name="settings_refresh_15">Every 15 minutes</string>
+    <string name="settings_refresh_30">Every 30 minutes</string>
+    <string name="settings_refresh_60">Every hour</string>
+    <string name="settings_refresh_120">Every 2 hours</string>
+    <string name="settings_section_notifications">Notifications</string>
+    <string name="settings_notifications">Price alerts</string>
+    <string name="settings_quiet_hours">Quiet hours</string>
+    <string name="settings_quiet_22_8">22:00 – 08:00</string>
+    <string name="settings_quiet_23_7">23:00 – 07:00</string>
+    <string name="settings_quiet_none">None</string>
+    <string name="settings_section_providers">Data sources</string>
+    <string name="settings_provider_health">Provider health</string>
+    <string name="settings_provider_ok">Healthy</string>
+    <string name="settings_provider_failing">Failing (failures: %1$d)</string>
+    <string name="settings_provider_never">No data yet</string>
+    <string name="settings_cg_key">CoinGecko API key (optional, demo plan)</string>
+    <string name="settings_tgju_enable">Enable TGJU-compatible source</string>
+    <string name="settings_tgju_url">Your authorized source endpoint URL</string>
+    <string name="settings_tgju_warning">Warning: using TGJU data requires complying with their terms and obtaining proper authorization. You are responsible for compliance. Enter an endpoint that returns the standard TGJU service schema.</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_privacy">Privacy policy</string>
+    <string name="settings_privacy_body">«Cheghadr?» collects no personal data. Watchlists, alerts, portfolio and settings stay on this device. Network requests only fetch market rates from public sources (CoinGecko, ExchangeRate-API, Frankfurter, and your TGJU source if enabled); your API keys never leave the device except to their own service.</string>
+    <string name="settings_sources">Data sources &amp; attribution</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_apply_note">Restart the app once to fully apply the language.</string>
+</resources>

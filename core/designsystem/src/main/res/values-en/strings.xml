@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freshness_fresh">fresh</string>
+    <string name="freshness_stale">stale</string>
+    <string name="freshness_very_stale">very old</string>
+    <string name="freshness_unknown">no data</string>
+</resources>

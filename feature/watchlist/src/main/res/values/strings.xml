@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="watchlist_title">دیده‌بان</string>
+    <string name="watchlist_empty">دیده‌بان خالی است. در بخش بازارها روی هر دارایی بزنید و با ستاره آن را اضافه کنید.</string>
+    <string name="watchlist_move_up">انتقال به بالا</string>
+    <string name="watchlist_move_down">انتقال به پایین</string>
+    <string name="watchlist_remove">حذف</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="watchlist_title">Watchlist</string>
+    <string name="watchlist_empty">Your watchlist is empty. Open an asset in Markets and star it to add.</string>
+    <string name="watchlist_move_up">Move up</string>
+    <string name="watchlist_move_down">Move down</string>
+    <string name="watchlist_remove">Remove</string>
+</resources>

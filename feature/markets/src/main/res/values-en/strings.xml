@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="markets_title">Markets</string>
+    <string name="markets_tab_currency">Currencies</string>
+    <string name="markets_tab_gold">Gold</string>
+    <string name="markets_tab_coin">Coins</string>
+    <string name="markets_tab_crypto">Crypto</string>
+    <string name="markets_tab_stock">Stocks</string>
+    <string name="markets_tab_commodity">Commodities</string>
+    <string name="markets_sort">Sort</string>
+    <string name="markets_sort_default">Default</string>
+    <string name="markets_sort_name">Name</string>
+    <string name="markets_sort_price">Price</string>
+    <string name="markets_sort_change">Change</string>
+    <string name="markets_sort_change_pct">% change</string>
+    <string name="markets_refresh">Refresh</string>
+    <string name="markets_empty">No assets in this category.</string>
+    <string name="search_hint">Search assets…</string>
+    <string name="search_title">Search</string>
+    <string name="search_history">Recent searches</string>
+    <string name="search_clear_history">Clear history</string>
+    <string name="search_no_results">No results found.</string>
+</resources>

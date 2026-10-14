@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cheghadr?</string>
+    <string name="app_tagline">Live market prices, honestly sourced</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_markets">Markets</string>
+    <string name="nav_watchlist">Watchlist</string>
+    <string name="nav_converter">Converter</string>
+    <string name="nav_more">More</string>
+
+    <!-- "More" hub -->
+    <string name="more_alerts">Alerts</string>
+    <string name="more_alerts_subtitle">Price alerts for your watched assets</string>
+    <string name="more_portfolio">Portfolio</string>
+    <string name="more_portfolio_subtitle">Record buys &amp; sells, track profit/loss — stored on this device only</string>
+    <string name="more_settings">Settings</string>
+    <string name="more_settings_subtitle">Language, appearance, data &amp; privacy</string>
+</resources>

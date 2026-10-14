@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="converter_title">مبدل</string>
+    <string name="converter_tab_currency">تبدیل ارز</string>
+    <string name="converter_tab_gold">ماشین‌حساب طلا</string>
+    <string name="converter_amount">مقدار</string>
+    <string name="converter_from">از</string>
+    <string name="converter_to">به</string>
+    <string name="converter_swap">جابه‌جایی</string>
+    <string name="converter_result">نتیجه</string>
+    <string name="converter_rate">۱ %1$s = %2$s %3$s</string>
+    <string name="converter_offline_warning">آفلاین؛ بر پایهٔ آخرین نرخ‌های ذخیره‌شده (%1$s)</string>
+    <string name="converter_cross_note">این تبدیل با محاسبهٔ متقاطع از نرخ‌های رسمی ذخیره‌شده انجام می‌شود.</string>
+    <string name="converter_invalid_amount">مقدار نامعتبر</string>
+    <string name="converter_gold_gram18">قیمت هر گرم طلای ۱۸ عیار</string>
+    <string name="converter_gold_prefill_hint">اگر بازار طلا فعال باشد از نرخ زنده پر می‌شود؛ در غیر این صورت مقدار را وارد کنید.</string>
+    <string name="converter_gold_gram24">طلای ۲۴ عیار (هر گرم)</string>
+    <string name="converter_gold_mithqal">مثقال</string>
+    <string name="converter_gold_ounce">انس</string>
+    <string name="converter_gold_coins">ارزش ذاتی سکه‌ها (برآورد، بدون حباب بازار)</string>
+    <string name="converter_gold_making">اجرت ساخت (٪)</string>
+    <string name="converter_gold_tax">مالیات (٪)</string>
+    <string name="converter_gold_discount">تخفیف (٪)</string>
+    <string name="converter_gold_breakdown">تفکیک برآورد خرده‌فروشی</string>
+    <string name="converter_gold_breakdown_base">ارزش پایه</string>
+    <string name="converter_gold_breakdown_making">اجرت ساخت</string>
+    <string name="converter_gold_breakdown_tax">مالیات</string>
+    <string name="converter_gold_breakdown_discount">تخفیف</string>
+    <string name="converter_gold_breakdown_total">مجموع برآوردی</string>
+    <string name="converter_gold_estimate_note">قیمت نهایی فروشگاه می‌تواند متفاوت باشد؛ این محاسبه فقط برآورد است.</string>
+</resources>

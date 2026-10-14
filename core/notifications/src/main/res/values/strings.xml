@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Persian is the default language of «چقدر؟». -->
+    <string name="channel_price_alerts">هشدارهای قیمت</string>
+    <string name="channel_price_alerts_desc">اطلاع‌رسانی عبور قیمت‌ها از حدود تعیین‌شده</string>
+    <string name="notif_alert_title">هشدار قیمت — %1$s</string>
+    <string name="notif_alert_above">قیمت از %1$s عبور کرد (قیمت فعلی: %2$s)</string>
+    <string name="notif_alert_below">قیمت به کمتر از %1$s رسید (قیمت فعلی: %2$s)</string>
+    <string name="notif_alert_pct_up">تغییر روزانه به بیش از %1$s%% رسید (اکنون: %2$s%%)</string>
+    <string name="notif_alert_pct_down">تغییر روزانه به کمتر از %1$s%% رسید (اکنون: %2$s%%)</string>
+    <string name="notif_action_open">مشاهده</string>
+    <string name="notif_action_dismiss">بستن</string>
+    <string name="notif_stale_note">بر اساس آخرین دادهٔ ذخیره‌شده</string>
+</resources>

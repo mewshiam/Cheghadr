@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Persian is the default language of «چقدر؟». -->
+<resources>
+    <string name="app_name">چقدر؟</string>
+    <string name="app_tagline">قیمت‌های لحظهٔ بازار، با منبع شفاف</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">خانه</string>
+    <string name="nav_markets">بازارها</string>
+    <string name="nav_watchlist">دیده‌بان</string>
+    <string name="nav_converter">مبدل</string>
+    <string name="nav_more">بیشتر</string>
+
+    <!-- "More" hub -->
+    <string name="more_alerts">هشدارها</string>
+    <string name="more_alerts_subtitle">هشدار قیمت برای دارایی‌های دیده‌بانی‌شده</string>
+    <string name="more_portfolio">پرتفوی</string>
+    <string name="more_portfolio_subtitle">ثبت خرید و فروش و پیگیری سود و زیان، فقط روی همین گوشی</string>
+    <string name="more_settings">تنظیمات</string>
+    <string name="more_settings_subtitle">زبان، نمایش، داده‌ها و حریم خصوصی</string>
+</resources>

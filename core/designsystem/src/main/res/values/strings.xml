@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="freshness_fresh">تازه</string>
+    <string name="freshness_stale">کهنه</string>
+    <string name="freshness_very_stale">قدیمی</string>
+    <string name="freshness_unknown">بدون داده</string>
+</resources>

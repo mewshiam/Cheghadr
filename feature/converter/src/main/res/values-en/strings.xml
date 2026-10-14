@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="converter_title">Converter</string>
+    <string name="converter_tab_currency">Currency</string>
+    <string name="converter_tab_gold">Gold calculator</string>
+    <string name="converter_amount">Amount</string>
+    <string name="converter_from">From</string>
+    <string name="converter_to">To</string>
+    <string name="converter_swap">Swap</string>
+    <string name="converter_result">Result</string>
+    <string name="converter_rate">1 %1$s = %2$s %3$s</string>
+    <string name="converter_offline_warning">Offline; based on last stored rates (%1$s)</string>
+    <string name="converter_cross_note">This conversion is a cross-rate computed from stored official rates.</string>
+    <string name="converter_invalid_amount">Invalid amount</string>
+    <string name="converter_gold_gram18">Gold 18k price per gram</string>
+    <string name="converter_gold_prefill_hint">Prefilled from the live market when available; otherwise enter a value.</string>
+    <string name="converter_gold_gram24">Gold 24k (per gram)</string>
+    <string name="converter_gold_mithqal">Mithqal</string>
+    <string name="converter_gold_ounce">Ounce</string>
+    <string name="converter_gold_coins">Coin intrinsic values (estimate, no market premium)</string>
+    <string name="converter_gold_making">Making charge (%)</string>
+    <string name="converter_gold_tax">Tax (%)</string>
+    <string name="converter_gold_discount">Discount (%)</string>
+    <string name="converter_gold_breakdown">Retail estimate breakdown</string>
+    <string name="converter_gold_breakdown_base">Base value</string>
+    <string name="converter_gold_breakdown_making">Making charge</string>
+    <string name="converter_gold_breakdown_tax">Tax</string>
+    <string name="converter_gold_breakdown_discount">Discount</string>
+    <string name="converter_gold_breakdown_total">Estimated total</string>
+    <string name="converter_gold_estimate_note">A shop\'s final price may differ; this is only an estimate.</string>
+</resources>

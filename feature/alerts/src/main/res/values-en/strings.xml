@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alerts_title">Alerts</string>
+    <string name="alerts_empty">No alerts yet. Create one from any asset\'s detail page.</string>
+    <string name="alerts_add">New alert</string>
+    <string name="alerts_asset">Asset</string>
+    <string name="alerts_type">Alert type</string>
+    <string name="alerts_type_above">Price above threshold</string>
+    <string name="alerts_type_below">Price below threshold</string>
+    <string name="alerts_type_pct_up">Daily % increase</string>
+    <string name="alerts_type_pct_down">Daily % decrease</string>
+    <string name="alerts_threshold">Threshold</string>
+    <string name="alerts_cooldown">Minimum minutes between notifications</string>
+    <string name="alerts_repeat">Repeat while the condition holds</string>
+    <string name="alerts_allow_stale">Allow triggering from stale data</string>
+    <string name="alerts_save">Save</string>
+    <string name="alerts_cancel">Cancel</string>
+    <string name="alerts_delete">Delete</string>
+    <string name="alerts_local_note">Alerts are evaluated locally on this device; Android constraints (battery optimization, Doze…) may delay notifications. Notification permission is required.</string>
+    <string name="alerts_threshold_invalid">Invalid threshold.</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_single_label">Cheghadr? — Live price</string>
+    <string name="widget_list_label">Cheghadr? — Watchlist</string>
+    <string name="widget_configure_title">Choose assets for the widget</string>
+    <string name="widget_configure_search_hint">Search assets…</string>
+    <string name="widget_loading">Loading…</string>
+    <string name="widget_no_data">No data stored yet</string>
+    <string name="widget_stale">stale</string>
+    <string name="widget_select_list_hint">Select up to 5 assets</string>
+    <string name="widget_confirm">Confirm</string>
+    <string name="widget_refresh">Refresh</string>
+    <string name="widget_unit_toman">toman</string>
+    <string name="widget_unit_rial">rial</string>
+</resources>
