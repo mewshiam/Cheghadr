@@ -14,10 +14,9 @@ import java.math.BigDecimal
  *                    demo key relaxes them; currently unmapped as the crypto catalog
  *                    defaults to CoinPaprika, kept registered per provider isolation).
  *
- * Conditional provider:
- *  - [TGJU] Iranian market data. Disabled by default: requires a user-supplied
- *    endpoint and compliance with TGJU's terms (written permission for
- *    redistribution). See docs/DATA_SOURCES.md.
+ *  - [TGJU] Iranian market data (free-market FX, gold, coins, TEDPIX, Brent)
+ *    scraped on-device from tgju.org's public pages. On by default; user can
+ *    disable it in Settings. See docs/DATA_SOURCES.md.
  *
  * [APP] marks values computed locally from other providers (e.g. cross rates);
  * such quotes always disclose their inputs.

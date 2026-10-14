@@ -4,14 +4,14 @@
 
 Cheghadr («چقدر؟» — *“How much?”*) tracks currencies, gold, coins, cryptocurrencies
 and more with one non-negotiable rule: **every price discloses its source and its
-age.** No invented numbers, no silent scraping, no fake fallbacks.
+age.** No invented numbers, no fake fallbacks.
 
 - **Native** Kotlin + Jetpack Compose (Material 3) — not a WebView, not a wrapper.
 - **Persian-first**: RTL layout, Vazirmatn typography, Jalali dates, Persian
   digits by default — with complete English localization.
 - **Honest data**: live, keyless sources (CoinPaprika, open.er-api, Frankfurter,
-  gold-api.com) plus an opt-in, user-configured TGJU-compatible source for the
-  Iranian free market.
+  gold-api.com) plus Iranian free-market rates scraped on-device from tgju.org
+  (toggleable in Settings).
 - **Customizable dashboard**: reorder/hide sections, pin featured assets,
   compact or comfortable density, optional mini charts — all persisted locally.
 - **Useful offline**: Room-cached quotes render instantly and are marked stale;
@@ -45,14 +45,15 @@ For what works without any configuration see [docs/DATA_SOURCES.md](docs/DATA_SO
 
 ## What you get on first launch
 
-| Market | Source (no key needed) | Live |
+| Market | Source | Live |
 |---|---|---|
 | Cryptocurrencies (16) | CoinPaprika `/v1/tickers` + daily history | ✅ |
 | Global gold & silver (XAU/XAG) | gold-api.com spot | ✅ |
 | Official FX in rial (USD, EUR, GBP, AED, …) | open.er-api.com | ✅ |
 | International crosses (EUR/USD, GBP/USD, …) | Frankfurter (ECB) + real history | ✅ |
-| Iranian free market (دلار آزاد، طلا، سکه) | your authorized TGJU-compatible endpoint | ⚙️ opt-in |
-| Tehran stock indices | requires an authorized source | ❌ honest “unavailable” state |
+| Iranian free market (دلار، یورو، درهم، لیر) | tgju.org scraper + ~25-day history | ✅ |
+| Iranian gold & coins (طلای ۱۸/۲۴، مثقال، سکه‌ها) | tgju.org scraper + ~25-day history | ✅ |
+| Tehran stock index (TEDPIX) & Brent oil | tgju.org scraper (sidebar) | ✅ |
 
 ## Documentation
 
@@ -74,8 +75,9 @@ should add one (see docs/BUILD.md → Release checklist).
 
 Market data by [CoinPaprika](https://coinpaprika.com/),
 [ExchangeRate-API (open endpoint)](https://www.exchangerate-api.com),
-[Frankfurter / ECB](https://frankfurter.dev) and
-[gold-api.com](https://gold-api.com) — terms in docs/DATA_SOURCES.md.
+[Frankfurter / ECB](https://frankfurter.dev), [gold-api.com](https://gold-api.com)
+and [tgju.org](https://www.tgju.org/) (Iranian markets, scraped on-device) —
+terms in docs/DATA_SOURCES.md.
 Font: [Vazirmatn](https://github.com/rastikerdar/vazirmatn) (OFL-1.1).
 
 ---

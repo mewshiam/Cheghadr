@@ -106,20 +106,53 @@ class AssetCatalogTest {
         assertTrue(AssetCatalog.forProvider(ProviderId.OPEN_ER_API).isNotEmpty())
         assertTrue(AssetCatalog.forProvider(ProviderId.FRANKFURTER).isNotEmpty())
         assertTrue(AssetCatalog.forProvider(ProviderId.GOLD_API).isNotEmpty())
+        assertTrue(AssetCatalog.forProvider(ProviderId.TGJU).isNotEmpty())
         // CoinGecko stays registered for provider isolation but currently
         // serves no catalog assets (crypto defaults to CoinPaprika).
         assertTrue(AssetCatalog.forProvider(ProviderId.COINGECKO).isEmpty())
     }
 
     @Test
-    fun `tgju assets ship unavailable`() {
+    fun `tgju assets ship live from the tgju org scraper`() {
         val tgjuAssets = AssetCatalog.all.filter { it.providerId == ProviderId.TGJU }
         assertTrue(tgjuAssets.isNotEmpty())
         tgjuAssets.forEach {
-            assertFalse("asset ${it.id} must ship unavailable", it.available)
-            assertNotNull(it.unavailableReasonFa)
-            assertNotNull(it.unavailableReasonEn)
+            assertTrue("asset ${it.id} must ship available", it.available)
         }
+    }
+
+    @Test
+    fun `tgju symbols match the live site`() {
+        // Slugs observed on tgju.org section/profile pages 2026-10-14.
+        val expected = mapOf(
+            "fx-fm:USD" to "price_dollar_rl",
+            "fx-fm:EUR" to "price_eur",
+            "fx-fm:AED" to "price_aed",
+            "fx-fm:TRY" to "price_try",
+            "gold:GRAM18" to "geram18",
+            "gold:GRAM24" to "geram24",
+            "gold:MESGHAL" to "mesghal",
+            "coin:EMAMI" to "sekee",
+            "coin:BAHAR" to "sekeb",
+            "coin:BAHAR_HALF" to "nim",
+            "coin:BAHAR_QUARTER" to "rob",
+            "coin:BAHAR_GERAMI" to "gerami",
+            "stock:TEDPIX" to "gc30",
+            "commodity:OIL_BRENT" to "oil_brent",
+        )
+        expected.forEach { (assetId, slug) ->
+            assertEquals("$assetId must map to slug $slug", slug, AssetCatalog.byId[assetId]!!.providerSymbol)
+        }
+    }
+
+    @Test
+    fun `tgju history support matches page capabilities`() {
+        // Profile pages serve a ~25-day OHLC table for these; oil_brent has
+        // no profile page (redirects) so it stays spot-only.
+        assertTrue(AssetCatalog.byId["fx-fm:USD"]!!.supportsHistory)
+        assertTrue(AssetCatalog.byId["gold:GRAM18"]!!.supportsHistory)
+        assertTrue(AssetCatalog.byId["stock:TEDPIX"]!!.supportsHistory)
+        assertFalse(AssetCatalog.byId["commodity:OIL_BRENT"]!!.supportsHistory)
     }
 
     @Test

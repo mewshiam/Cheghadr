@@ -67,10 +67,9 @@ class SyncCoordinator @Inject constructor(
         val historyDao = db.historyDao()
         val statusDao = db.providerStatusDao()
 
-        // TGJU-backed markets become available only when the provider is configured.
+        // TGJU-backed markets appear/disappear with the scraped source toggle.
         val s = settings.settings.first()
-        val tgjuConfigured = s.tgjuEnabled && s.tgjuBaseUrl.isNotBlank()
-        assetDao.setAvailableForProvider(ProviderId.TGJU.name, tgjuConfigured)
+        assetDao.setAvailableForProvider(ProviderId.TGJU.name, s.tgjuEnabled)
 
         val now = System.currentTimeMillis()
         val errors = mutableListOf<String>()

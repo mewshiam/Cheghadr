@@ -6,8 +6,6 @@ import ir.cheghadr.core.data.network.parseCoinGeckoSimplePrice
 import ir.cheghadr.core.data.network.parseCoinPaprikaHistorical
 import ir.cheghadr.core.data.network.parseCoinPaprikaTickers
 import ir.cheghadr.core.data.network.parseGoldApiSpot
-import ir.cheghadr.core.data.network.parseTgjuWidgetJson
-import ir.cheghadr.core.data.network.parseTgjuNumber
 import ir.cheghadr.core.data.network.toOfficialRates
 import ir.cheghadr.core.data.network.toQuotes
 import ir.cheghadr.core.data.network.FrankfurterLatest
@@ -107,43 +105,7 @@ class ProviderParsingTest {
         assertEquals(0.89381, quotes["fxint:EUR-USD"]!!.price!!.toDouble(), 1e-9)
     }
 
-    // ------------------------------------------------------------- TGJU schema
-
-    @Test
-    fun `tgju widget schema with current wrapper`() {
-        val body = """
-            {"current":{"price_dollar_rl":{"p":"58,000","d":"200","dp":"0.35","t":"12:30"},
-            "geram18":{"p":"3,500,000","d":"-15000","dp":"-0.42","t":"12:30"}}}
-        """.trimIndent()
-        val parsed = parseTgjuWidgetJson(body)
-        assertEquals(2, parsed.size)
-        assertEquals(58000.0, parsed["price_dollar_rl"]!!.price!!.toDouble(), 1e-9)
-        assertEquals(0.35, parsed["price_dollar_rl"]!!.changePercent!!.toDouble(), 1e-9)
-        assertEquals(-15000.0, parsed["geram18"]!!.changeAbs!!.toDouble(), 1e-9)
-    }
-
-    @Test
-    fun `tgju flat schema variant`() {
-        val body = """{"sekeemami":{"p":"70,000,000","dp":"1.2"}}"""
-        val parsed = parseTgjuWidgetJson(body)
-        assertEquals(1, parsed.size)
-        assertEquals(70000000.0, parsed["sekeemami"]!!.price!!.toDouble(), 1e-9)
-    }
-
-    @Test
-    fun `tgju number parsing`() {
-        assertEquals(58000.0, parseTgjuNumber("58,000")!!.toDouble(), 1e-9)
-        assertEquals(58000.0, parseTgjuNumber("58٬000")!!.toDouble(), 1e-9)
-        assertEquals(-1.5, parseTgjuNumber("-1.5")!!.toDouble(), 1e-9)
-        assertNull(parseTgjuNumber(""))
-        assertNull(parseTgjuNumber("abc"))
-    }
-
-    @Test
-    fun `tgju rejects non-positive prices`() {
-        val body = """{"price_dollar_rl":{"p":"0","dp":"0"}}"""
-        assertTrue(parseTgjuWidgetJson(body).isEmpty())
-    }
+    // --- tgju.org HTML scraping is covered by TgjuScraperTest (live fixtures) ---
 }
 
 // ------------------------------------------------------------- CoinPaprika

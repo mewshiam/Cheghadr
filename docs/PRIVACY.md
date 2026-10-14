@@ -7,7 +7,7 @@ behavior — not aspirations.
 
 | Data | Destination | When |
 |---|---|---|
-| HTTP GET requests to market-data endpoints | CoinPaprika, open.er-api.com, Frankfurter, gold-api.com (and a user-configured TGJU-compatible URL if enabled) | on launch/foreground refresh, pull-to-refresh, and periodic background sync |
+| HTTP GET requests to market-data endpoints | CoinPaprika, open.er-api.com, Frankfurter, gold-api.com, and tgju.org public HTML pages (currency/gold/coin sections + per-symbol profile pages) when the Iranian-market toggle is on | on launch/foreground refresh, pull-to-refresh, and periodic background sync |
 | A CoinGecko demo API key, **if the user enters one** | sent as a request header to CoinGecko only | only when CoinGecko is actually queried |
 
 That is the entire outbound surface. Requests carry no user identifier, no
@@ -22,8 +22,8 @@ listed in the version catalog**.
   years), asset metadata, favorites, alerts + trigger state, portfolio
   transactions, widget configurations, search history, provider health.
 - **DataStore** (app-private): language, theme, digit style, toman display,
-  refresh interval, notification preferences, quiet hours, TGJU URL + enable
-  flag, CoinGecko demo key.
+  refresh interval, notification preferences, quiet hours, TGJU toggle + base
+  URL (optional mirror), CoinGecko demo key.
 - Backups follow `backup_rules.xml` / `data_extraction_rules.xml` — Android's
   default cloud backup of app data is allowed unless the user disabled it
   system-wide; the app never uploads this data itself.
@@ -40,7 +40,8 @@ listed in the version catalog**.
 ## Deleting your data
 
 Uninstalling the app removes the Room database and DataStore entirely
-(including your optional API keys and TGJU URL). Nothing persists elsewhere.
+(including your optional API keys and TGJU mirror URL). Nothing persists
+elsewhere.
 
 ## Template note for public releases
 

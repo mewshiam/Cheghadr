@@ -32,12 +32,12 @@
     <string name="settings_provider_failing">خطا (تلاش‌های ناموفق: %1$d)</string>
     <string name="settings_provider_never">هنوز داده نگرفته</string>
     <string name="settings_cg_key">کلید API کوین‌گکو (اختیاری، طرح Demo)</string>
-    <string name="settings_tgju_enable">فعال‌سازی منبع TGJU-compatible</string>
-    <string name="settings_tgju_url">نشانی نقطه‌پایانی (Endpoint) منبع مجاز شما</string>
-    <string name="settings_tgju_warning">هشدار: استفاده از داده‌های TGJU نیازمند رعایت شرایط استفاده و کسب مجوز لازم است. مسئولیت رعایت قوانین با شماست. پایانی وارد کنید که اسکیمای استاندارد سرویس TGJU را برگرداند.</string>
+    <string name="settings_tgju_enable">داده‌های بازار ایران از tgju.org</string>
+    <string name="settings_tgju_url">نشانی پایهٔ tgju.org — فقط برای آینه‌ها؛ خالی یعنی پیش‌فرض</string>
+    <string name="settings_tgju_warning">نرخ‌های بازار ایران (دلار آزاد، طلا، سکه، شاخص بورس و برنت) مستقیماً از صفحه‌های عمومی tgju.org در همین دستگاه خوانده می‌شود؛ هر به‌روزرسانی تا حدود ۱٫۵ مگابایت داده دریافت می‌کند و مسئولیت رعایت شرایط استفادهٔ سایت با شماست.</string>
     <string name="settings_section_about">درباره</string>
     <string name="settings_privacy">سیاست حریم خصوصی</string>
-    <string name="settings_privacy_body">«چقدر؟» هیچ دادهٔ شخصی جمع‌آوری نمی‌کند. دیده‌بان، هشدارها، پرتفوی و تنظیمات فقط روی همین دستگاه ذخیره می‌شوند. درخواست‌های شبکه فقط برای دریافت نرخ‌های بازار از منابع عمومی (CoinGecko، ExchangeRate-API، Frankfurter و در صورت فعال‌سازی منبع TGJU شما) انجام می‌شود و کلیدهای API شما هرگز از دستگاه ارسال نمی‌شود مگر به همان سرویس.</string>
+    <string name="settings_privacy_body">«چقدر؟» هیچ دادهٔ شخصی جمع‌آوری نمی‌کند. دیده‌بان، هشدارها، پرتفوی و تنظیمات فقط روی همین دستگاه ذخیره می‌شوند. درخواست‌های شبکه فقط برای دریافت نرخ‌های بازار از منابع عمومی (CoinPaprika، CoinGecko، ExchangeRate-API، Frankfurter، gold-api.com و صفحه‌های عمومی tgju.org در صورت فعال‌بودن) انجام می‌شود و کلیدهای API شما هرگز از دستگاه ارسال نمی‌شود مگر به همان سرویس.</string>
     <string name="settings_sources">منابع و اعتبار داده‌ها</string>
     <string name="settings_version">نسخه %1$s</string>
     <string name="settings_apply_note">برای اعمال کامل زبان، برنامه یک‌بار باز و بسته شود.</string>

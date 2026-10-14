@@ -22,6 +22,8 @@ private val Context.userPrefsDataStore: DataStore<Preferences> by preferencesDat
     name = "cheghadr_prefs",
 )
 
+private const val DEFAULT_TGJU_BASE_URL = "https://www.tgju.org"
+
 /** All user preferences in one immutable snapshot. */
 data class UserSettings(
     val language: AppLanguage = AppLanguage.PERSIAN,
@@ -35,9 +37,10 @@ data class UserSettings(
     /** Quiet hours (minutes of day) during which alert notifications are suppressed. */
     val quietHoursStart: Int = 22 * 60,
     val quietHoursEnd: Int = 8 * 60,
-    /** TGJU-compatible provider — disabled until the user configures an authorized endpoint. */
-    val tgjuEnabled: Boolean = false,
-    val tgjuBaseUrl: String = "",
+    /** TGJU — Iranian market data scraped from tgju.org. On by default;
+     *  the base URL stays overridable for mirrors. */
+    val tgjuEnabled: Boolean = true,
+    val tgjuBaseUrl: String = DEFAULT_TGJU_BASE_URL,
     /** Optional CoinGecko demo key to relax public rate limits. */
     val coingeckoApiKey: String = "",
 )
@@ -80,8 +83,8 @@ class SettingsRepository @Inject constructor(
             notificationsEnabled = p[Keys.NOTIFICATIONS] ?: true,
             quietHoursStart = p[Keys.QUIET_START] ?: (22 * 60),
             quietHoursEnd = p[Keys.QUIET_END] ?: (8 * 60),
-            tgjuEnabled = p[Keys.TGJU_ENABLED] ?: false,
-            tgjuBaseUrl = p[Keys.TGJU_URL] ?: "",
+            tgjuEnabled = p[Keys.TGJU_ENABLED] ?: true,
+            tgjuBaseUrl = p[Keys.TGJU_URL]?.takeIf { it.isNotBlank() } ?: DEFAULT_TGJU_BASE_URL,
             coingeckoApiKey = p[Keys.CG_KEY] ?: "",
         )
     }

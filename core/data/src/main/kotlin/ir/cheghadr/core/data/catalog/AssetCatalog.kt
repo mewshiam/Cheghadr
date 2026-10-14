@@ -10,16 +10,18 @@ import ir.cheghadr.core.model.ProviderId
  * provider mappings. Display names are never used as identifiers.
  *
  * Availability policy (docs/DATA_SOURCES.md):
- *  - Crypto (CoinPaprika), global gold/silver ounce (gold-api.com) and official
- *    FX cross rates (open.er-api / Frankfurter) are live and keyless.
- *  - Iranian free-market USD, domestic gold, coins and Tehran stock indices
- *    require a TGJU-compatible authorized source → shipped unavailable until
- *    the user enables the TGJU provider in Settings.
+ *  - Crypto (CoinPaprika), global gold/silver ounce (gold-api.com), official
+ *    FX cross rates (open.er-api / Frankfurter) and Iranian free-market data
+ *    scraped from tgju.org (currency + gold + coins + TEDPIX + Brent) are all
+ *    live and keyless.
+ *  - TGJU symbols below were verified against the live site on 2026-10-14
+ *    (section tables: /currency, /gold-chart, /coin; sidebar; profile pages).
  */
 object AssetCatalog {
 
     val all: List<Asset> by lazy {
-        crypto + currenciesOfficial + currenciesInternational + gold + coins + stocks + commodities
+        crypto + currenciesOfficial + currenciesFreeMarket + currenciesInternational +
+            gold + coins + stocks + commodities
     }
 
     val byId: Map<String, Asset> by lazy { all.associateBy { it.id } }
@@ -28,7 +30,7 @@ object AssetCatalog {
     fun forProvider(providerId: ProviderId): List<Asset> =
         all.filter { it.providerId == providerId && it.available }
 
-    /** TGJU-symbol → canonical asset (used when the TGJU provider is enabled). */
+    /** TGJU-symbol → canonical asset (used by the tgju.org scraper). */
     val byTgjuSymbol: Map<String, Asset> by lazy {
         all.filter { it.providerId == ProviderId.TGJU }.associateBy { it.providerSymbol }
     }
@@ -110,7 +112,10 @@ object AssetCatalog {
         officialFx("CAD", "دلار کانادا (نرخ رسمی)", "Canadian Dollar (official)", 8),
         officialFx("AUD", "دلار استرالیا (نرخ رسمی)", "Australian Dollar (official)", 9),
         officialFx("CHF", "فرانک سوئیس (نرخ رسمی)", "Swiss Franc (official)", 10),
-        // Free-market USD — the flagship Iranian rate — requires an authorized source.
+    )
+
+    /** Free-market (bazaar) rates — live from tgju.org scraping, quoted in rial. */
+    private val currenciesFreeMarket = listOf(
         Asset(
             id = "fx-fm:USD",
             category = AssetCategory.CURRENCY,
@@ -122,12 +127,33 @@ object AssetCatalog {
             quoteCurrency = "IRR",
             unit = PriceUnit.RIAL,
             aliases = listOf("دلار آزاد", "دلار بازار", "dollar"),
-            available = false,
-            unavailableReasonFa = "نرخ بازار آزاد نیازمند منبع دارای مجاز (مانند TGJU) است. در تنظیمات می‌توانید منبع مجاز خود را فعال کنید.",
-            unavailableReasonEn = "Free-market rates require an authorized source (e.g. TGJU). You can enable your authorized source in Settings.",
-            supportsHistory = false,
+            supportsHistory = true,
             sortOrder = 0,
         ),
+        tgjuFx("EUR", "یورو (بازار آزاد)", "Euro (free market)", "price_eur", 11),
+        tgjuFx("AED", "درهم امارات (بازار آزاد)", "UAE Dirham (free market)", "price_aed", 12),
+        tgjuFx("TRY", "لیر ترکیه (بازار آزاد)", "Turkish Lira (free market)", "price_try", 13),
+    )
+
+    private fun tgjuFx(
+        symbol: String,
+        nameFa: String,
+        nameEn: String,
+        tgjuSymbol: String,
+        sort: Int,
+    ) = Asset(
+        id = "fx-fm:$symbol",
+        category = AssetCategory.CURRENCY,
+        symbol = symbol,
+        nameFa = nameFa,
+        nameEn = nameEn,
+        providerId = ProviderId.TGJU,
+        providerSymbol = tgjuSymbol,
+        quoteCurrency = "IRR",
+        unit = PriceUnit.RIAL,
+        aliases = listOf(nameFa, nameEn, symbol),
+        supportsHistory = true,
+        sortOrder = sort,
     )
 
     /** International cross pairs with real ECB history (Frankfurter). */
@@ -181,18 +207,15 @@ object AssetCatalog {
     )
 
     private val coins = listOf(
-        tgjuAsset("coin:EMAMI", AssetCategory.COIN, "سکه امامی", "Emami coin", "sekeemami", PriceUnit.UNIT, 1),
-        tgjuAsset("coin:EMAMI_HALF", AssetCategory.COIN, "نیم سکه امامی", "Half Emami coin", "sekeemami1_2", PriceUnit.UNIT, 2),
-        tgjuAsset("coin:EMAMI_QUARTER", AssetCategory.COIN, "ربع سکه امامی", "Quarter Emami coin", "sekeemami1_4", PriceUnit.UNIT, 3),
-        tgjuAsset("coin:BAHAR", AssetCategory.COIN, "سکه بهار آزادی", "Bahar Azadi coin", "sekebahir", PriceUnit.UNIT, 4),
-        tgjuAsset("coin:BAHAR_HALF", AssetCategory.COIN, "نیم سکه بهار آزادی", "Half Bahar Azadi", "sekebahir1_2", PriceUnit.UNIT, 5),
-        tgjuAsset("coin:BAHAR_QUARTER", AssetCategory.COIN, "ربع سکه بهار آزادی", "Quarter Bahar Azadi", "sekebahir1_4", PriceUnit.UNIT, 6),
-        tgjuAsset("coin:BAHAR_GERAMI", AssetCategory.COIN, "سکه گرمی", "Gerami coin", "sekebahirgerami", PriceUnit.UNIT, 7),
+        tgjuAsset("coin:EMAMI", AssetCategory.COIN, "سکه امامی", "Emami coin", "sekee", PriceUnit.UNIT, 1),
+        tgjuAsset("coin:BAHAR", AssetCategory.COIN, "سکه بهار آزادی", "Bahar Azadi coin", "sekeb", PriceUnit.UNIT, 2),
+        tgjuAsset("coin:BAHAR_HALF", AssetCategory.COIN, "نیم سکه", "Half coin", "nim", PriceUnit.UNIT, 3),
+        tgjuAsset("coin:BAHAR_QUARTER", AssetCategory.COIN, "ربع سکه", "Quarter coin", "rob", PriceUnit.UNIT, 4),
+        tgjuAsset("coin:BAHAR_GERAMI", AssetCategory.COIN, "سکه گرمی", "Gerami coin", "gerami", PriceUnit.UNIT, 5),
     )
 
     private val stocks = listOf(
-        tgjuAsset("stock:TEDPIX", AssetCategory.STOCK, "شاخص کل بورس تهران", "Tehran SE total index", "shindex", PriceUnit.UNIT, 1, quoteCurrency = "PTS"),
-        tgjuAsset("stock:TEDPIX_EQ", AssetCategory.STOCK, "شاخص کل (هم‌وزن)", "Tehran SE equal-weight index", "shindex_e", PriceUnit.UNIT, 2, quoteCurrency = "PTS"),
+        tgjuAsset("stock:TEDPIX", AssetCategory.STOCK, "شاخص کل بورس تهران", "Tehran SE total index", "gc30", PriceUnit.UNIT, 1, quoteCurrency = "PTS"),
     )
 
     private val commodities = listOf(
@@ -212,7 +235,7 @@ object AssetCatalog {
             supportsHistory = false,
             sortOrder = 1,
         ),
-        tgjuAsset("commodity:OIL_BRENT", AssetCategory.COMMODITY, "نفت برنت", "Brent oil", "oil_brent", PriceUnit.BARREL, 2, quoteCurrency = "USD"),
+        tgjuAsset("commodity:OIL_BRENT", AssetCategory.COMMODITY, "نفت برنت", "Brent oil", "oil_brent", PriceUnit.BARREL, 2, quoteCurrency = "USD", history = false),
     )
 
     private fun tgjuAsset(
@@ -224,6 +247,7 @@ object AssetCatalog {
         unit: PriceUnit,
         sort: Int,
         quoteCurrency: String = "IRR",
+        history: Boolean = true,
     ) = Asset(
         id = id,
         category = category,
@@ -235,10 +259,7 @@ object AssetCatalog {
         quoteCurrency = quoteCurrency,
         unit = unit,
         aliases = listOf(nameFa, nameEn, tgjuSymbol),
-        available = false,
-        unavailableReasonFa = "این بازار در حال حاضر منبع دادهٔ رایگان و مجازی ندارد؛ با فعال‌سازی منبع TGJU دارای مجاز در تنظیمات فعال می‌شود.",
-        unavailableReasonEn = "No keyless, authorized source currently covers this market. Enable your authorized TGJU-compatible source in Settings to activate it.",
-        supportsHistory = false,
+        supportsHistory = history,
         sortOrder = sort,
     )
 }

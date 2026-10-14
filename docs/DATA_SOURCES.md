@@ -2,8 +2,8 @@
 
 All endpoints below were **verified live from the build environment on
 2026-10-14**; sample responses are embedded in the parser unit tests
-(`core/data/src/test/.../ProviderParsingTest.kt`). Nothing in this document is
-assumed from documentation alone.
+(`core/data/src/test/.../ProviderParsingTest.kt`, `TgjuScraperTest.kt`).
+Nothing in this document is assumed from documentation alone.
 
 ## Active providers (no key, enabled by default)
 
@@ -46,31 +46,49 @@ Observed 2026-10-14 (abridged, full fixtures in tests):
   with an optional demo-key setting, but currently maps no catalog assets.
 - **Official ≠ free market.** open.er-api publishes *official* (bank-reference)
   IRR rates; they are labeled «نرخ رسمی» and never presented as free-market
-  rates. Free-market rates require the opt-in TGJU source.
+  rates. Free-market rates come from the tgju.org scraper below.
 - **Frankfurter cross pairs** quote foreign units per USD; the converter
   inverts them and labels the provenance.
 - **gold-api.com has no history** — the app accumulates device-side
   observations (≤1/hour, 2-year retention) and charts those, clearly marked.
 
-## Conditional provider (shipped disabled)
+## Scraped provider (on by default, user-toggleable)
 
-### TGJU-compatible source
+### tgju.org — Iranian market data
 
-- Investigated: `https://www.tgju.org/`, `https://help.tgju.org/`,
-  `https://gem.tgju.org/terms`.
-- **Finding:** the documented web-service API is a paid product, and TGJU's
-  terms state that copying/redistributing content requires written permission.
-  The public API endpoint was **not reachable** from the build environment
-  (HTTP 404) — no undocumented or guessed endpoint was put into production
-  code, per the product rules.
-- **Implementation:** `TgjuProvider` parses the standard TGJU web-service JSON
-  widget schema (`{"current":{"price_dollar_rl":{"p":"58,000","d":"…","dp":"…"}}}`)
-  against a **user-supplied base URL** (Settings → داده‌ها). It stays disabled
-  until the user enables it; enabling it flips the TGJU-backed catalog entries
-  (دلار آزاد، طلای ۱۸/۲۴ عیار، مثقال، سکه‌ها، شاخص بورس) to available.
-- **The user is responsible for having authorization** for the endpoint they
-  configure; the app sends no credentials and bypasses nothing (no CAPTCHA
-  evasion, no identity rotation, no rate-limit evasion).
+- Investigated live on 2026-10-14: `https://www.tgju.org/` and its section
+  and profile pages (structure verified with captured fixtures).
+- **Finding:** the documented web-service API (`api.tgju.org`) is a paid
+  product and was unreachable (HTTP 404 / intermittent). The site's **public
+  HTML pages**, however, are server-rendered and reachable — the app scrapes
+  those directly, at the repo owner's explicit request.
+- **Implementation** (`TgjuProvider` + `TgjuScraper`, Jsoup):
+  - Quotes — three section pages per refresh, fetched in parallel:
+    `/currency` (free-market FX), `/gold-chart` (gold), `/coin` (coins).
+    Rows are identified by `tr[data-market-row]` + `data-price`; the change
+    cell's `span.high|low` class carries the change sign; daily low/high and
+    the update time come from sibling cells.
+  - Sidebar — every page embeds a site-wide live box (`li#l-{symbol}`) which
+    is the only server-rendered source for `gc30` (TEDPIX) and `oil_brent`.
+  - History — `/profile/{symbol}` renders a ~25-day daily OHLC table
+    (Jalali dates, close column) plus the live sidebar price for today;
+    `oil_brent` has no profile page (redirects) and stays spot-only.
+  - Robustness — every fetch retries transient Cloudflare 404s (observed:
+    a valid profile URL answered 404 once, then 200); browser-like headers
+    are sent; numbers may be ASCII/Persian digits with `,`/`٬` separators.
+- **Catalog symbols verified against the live site:** `price_dollar_rl`,
+  `price_eur`, `price_aed`, `price_try`, `geram18`, `geram24`, `mesghal`,
+  `sekee` (Emami), `sekeb` (Bahar Azadi), `nim`, `rob`, `gerami`, `gc30`
+  (TEDPIX), `oil_brent`.
+- **Costs & politeness:** three HTML pages ≈ 1.5 MB per refresh (no gzip —
+  kept off the shared client to avoid regressing the JSON providers);
+  requests happen only at the sync cadence (default 30 min) with exponential
+  backoff on failure. Disable anytime in Settings → منابع داده.
+- **Compliance:** scraping happens on-device for personal display; the app
+  sends no credentials, bypasses nothing (no CAPTCHA evasion, no identity
+  rotation, no rate-limit evasion) and shows TGJU attribution on Iranian
+  markets. The repo owner accepts responsibility for complying with the
+  site's terms.
 
 ## Rejected / not integrated
 
@@ -79,7 +97,7 @@ Observed 2026-10-14 (abridged, full fixtures in tests):
 | CoinGecko public API | verified working but repeatedly HTTP 429 within a short window; kept as optional secondary, not the default |
 | CoinMarketCap | free tier requires an API key at build time; key handling policy prefers user-supplied keys → not integrated for v1 |
 | Nobitex / domestic exchanges | DNS-blocked from the build environment; could not verify terms or responses — not integrated |
-| TGJU scraping (HTML) | not implemented: written permission is required for redistribution; a backend ingestion worker would be needed first |
+| tgju.org crypto table | USD-quoted global prices duplicate CoinPaprika coverage with no history → crypto stays on CoinPaprika |
 
 ## Per-category coverage after all of the above
 
@@ -87,10 +105,10 @@ Observed 2026-10-14 (abridged, full fixtures in tests):
 |---|---|---|
 | CRYPTO | CoinPaprika | quotes + real history |
 | CURRENCY (official) | open.er-api + Frankfurter | IRR-quoted officials + USD crosses |
-| CURRENCY (free market) | TGJU (opt-in) | honest unavailable state until configured |
+| CURRENCY (free market) | tgju.org scraper | USD, EUR, AED, TRY — rial-quoted, ~25-day history |
 | GOLD (global ounce) | gold-api.com | spot, USD |
-| GOLD (gram/mithqal, Iranian) | TGJU (opt-in) | unavailable state until configured |
-| COIN | TGJU (opt-in) | unavailable state until configured |
-| STOCK (Tehran indices) | TGJU (opt-in) | unavailable state until configured |
+| GOLD (gram/mithqal, Iranian) | tgju.org scraper | geram18/24 + mesghal, ~25-day history |
+| COIN | tgju.org scraper | Emami, Bahar Azadi, half, quarter, gerami |
+| STOCK (Tehran indices) | tgju.org scraper | TEDPIX via site sidebar + profile history |
 | COMMODITY (silver) | gold-api.com | spot, USD |
-| COMMODITY (Brent oil) | none permissible found | honest unavailable state, documented |
+| COMMODITY (Brent oil) | tgju.org scraper | spot via sidebar, USD; no profile history (local observations) |

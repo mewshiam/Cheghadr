@@ -32,12 +32,12 @@
     <string name="settings_provider_failing">Failing (failures: %1$d)</string>
     <string name="settings_provider_never">No data yet</string>
     <string name="settings_cg_key">CoinGecko API key (optional, demo plan)</string>
-    <string name="settings_tgju_enable">Enable TGJU-compatible source</string>
-    <string name="settings_tgju_url">Your authorized source endpoint URL</string>
-    <string name="settings_tgju_warning">Warning: using TGJU data requires complying with their terms and obtaining proper authorization. You are responsible for compliance. Enter an endpoint that returns the standard TGJU service schema.</string>
+    <string name="settings_tgju_enable">Iranian market data from tgju.org</string>
+    <string name="settings_tgju_url">tgju.org base URL — mirrors only; empty means default</string>
+    <string name="settings_tgju_warning">Iranian rates (free-market USD, gold, coins, TEDPIX and Brent) are scraped on-device from tgju.org’s public pages; each refresh may download up to ~1.5 MB of data, and you are responsible for complying with the site’s terms.</string>
     <string name="settings_section_about">About</string>
     <string name="settings_privacy">Privacy policy</string>
-    <string name="settings_privacy_body">«Cheghadr?» collects no personal data. Watchlists, alerts, portfolio and settings stay on this device. Network requests only fetch market rates from public sources (CoinGecko, ExchangeRate-API, Frankfurter, and your TGJU source if enabled); your API keys never leave the device except to their own service.</string>
+    <string name="settings_privacy_body">«Cheghadr?» collects no personal data. Watchlists, alerts, portfolio and settings stay on this device. Network requests only fetch market rates from public sources (CoinPaprika, CoinGecko, ExchangeRate-API, Frankfurter, gold-api.com and tgju.org public pages when enabled); your API keys never leave the device except to their own service.</string>
     <string name="settings_sources">Data sources &amp; attribution</string>
     <string name="settings_version">Version %1$s</string>
     <string name="settings_apply_note">Restart the app once to fully apply the language.</string>

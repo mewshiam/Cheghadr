@@ -13,23 +13,24 @@ service should be re-verified before any commercial redistribution.
 | Frankfurter | MIT-licensed service serving ECB reference rates. ECB rates are public-sector information reused under ECB's reuse policy. | Attribution (“ECB reference rates via Frankfurter”); business-daily data used as-is |
 | gold-api.com | Markets itself as a free gold/silver price API without a key; terms page should be re-checked for rate/redistribution limits. | Attribution; two requests per sync |
 | CoinGecko (optional) | Free/public endpoints have documented rate limits and attribution requirements; the Demo plan (optional user key) relaxes limits. | Attribution; optional user-supplied demo key stored only in DataStore; currently maps no catalog assets |
-| TGJU | Site terms state copying content requires written permission; the documented API is a paid product. | Provider ships **disabled**; the user must supply their own authorized endpoint; the app performs no scraping, no auth bypass |
+| TGJU (tgju.org) | Site terms state copying content requires written permission and the documented API is a paid product. Scraping was implemented **at the repository owner's explicit request** for personal, on-device use. | On-device scraping of public pages only (no auth bypass, no CAPTCHA/identity/rate-limit evasion); attribution on every Iranian market quote; toggleable in Settings; owner accepts terms-compliance responsibility |
 
 ## Principles encoded in the implementation
 
-1. **No secrets in the repo or APK.** Provider keys (CoinGecko demo key,
-   TGJU URL) are user-entered at runtime and stored in the app's private
+1. **No secrets in the repo or APK.** Provider keys (CoinGecko demo key)
+   are user-entered at runtime and stored in the app's private
    DataStore; nothing is compiled in. Signing material is injected via
    environment variables in CI only.
-2. **No unauthorized scraping.** There is no HTML parser for TGJU in the
-   product code path. If an authorized ingestion path emerges, the blueprint
-   requires a backend worker — never per-device scraping.
+2. **Controlled scraping.** The only HTML scraper (tgju.org) was added at the
+   repository owner's explicit direction: on-device, public pages, browser-like
+   headers, sync-cadence request rate with exponential backoff, full attribution,
+   and a settings toggle. No credential use, no anti-bot bypass of any kind.
 3. **Attribution travels with the data.** Every quote row, detail screen and
    share text names its provider; the settings screen shows live provider
    health (last success, last error, consecutive failures).
 4. **Facts are not relabeled.** Official rates are labeled official; computed
-   cross rates are labeled computed; free-market values appear only when the
-   user enables their authorized source. The converter never mixes a
+   cross rates are labeled computed; free-market values come from the tgju.org
+   scraper and are labeled «بازار آزاد». The converter never mixes a
    USD-quoted crypto price with an IRR-quoted official rate without an
    explicit, disclosed conversion step.
 5. **Device-local caching only.** Provider responses are cached in the app's

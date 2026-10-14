@@ -26,7 +26,7 @@ favorites inside `feature:watchlist`):
 ├── feature:converter      currency converter + gold calculator
 ├── feature:alerts         alert rules CRUD + notification preferences
 ├── feature:portfolio      local-only transactions and P/L
-└── feature:settings       language, appearance, data, TGJU config, privacy
+└── feature:settings       language, appearance, data, sources config, privacy
 ```
 
 Dependencies only point downwards (`feature → core`, `core:x → core:model`),
@@ -42,7 +42,7 @@ never sideways; `:app` is the only module that knows about all of them.
  │ Frankfurter      │            │  • never overwrite valid  │        │   ↓      │
  │ gold-api.com     │            │    cache with bad data    │        │  Screen  │
  │ CoinGecko (opt.) │            │  • backoff + jitter       │        │   ↑      │
- │ TGJU (opt-in)    │            │  • sample local history   │        │  events  │
+ │ tgju.org scraper │            │  • sample local history   │        │  events  │
  └──────────────────┘            └───────────────────────────┘        └──────────┘
         ▲                                    ▲                            │
         │                                    │                            ▼

@@ -28,6 +28,10 @@
 # Android ships none, so silence the missing-class warning.
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn org.slf4j.**
+
+# --- Jsoup (tgju.org HTML scraper) ---
+# R8 shrinks Jsoup fine; only silence optional-dependency notes.
+-dontwarn org.jsoup.**
 -keepclassmembers class io.ktor.** {
     volatile <fields>;
 }

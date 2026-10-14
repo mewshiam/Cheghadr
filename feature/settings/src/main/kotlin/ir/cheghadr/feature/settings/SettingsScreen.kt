@@ -232,8 +232,8 @@ fun SettingsScreen(
                     Text(stringResource(R.string.settings_privacy))
                 }
                 Text(
-                    text = stringResource(R.string.settings_sources) + ": CoinGecko · ExchangeRate-API · Frankfurter (ECB) · " +
-                        stringResource(R.string.settings_tgju_enable),
+                    text = stringResource(R.string.settings_sources) +
+                        ": CoinPaprika · CoinGecko · ExchangeRate-API · Frankfurter (ECB) · gold-api.com · tgju.org",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

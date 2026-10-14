@@ -6,7 +6,6 @@ import ir.cheghadr.core.model.RawQuote
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -216,45 +215,11 @@ fun parseGoldApiSpot(body: String): RawQuote? {
     )
 }
 
-// ------------------------------------------------------------- TGJU-compatible
+// ------------------------------------------------------------- TGJU
 
-/**
- * Parses the standard TGJU web-service JSON widget schema:
- *   {"current": {"price_dollar_rl": {"p":"58,000","d":"...","dp":"...","t":"12:30"}}}
- * or the flat variant {"price_dollar_rl": {...}}.
- *
- * The TGJU provider is disabled by default; the endpoint is user-supplied and
- * must be authorized under TGJU's terms (docs/DATA_SOURCES.md §3.1).
- */
-fun parseTgjuWidgetJson(body: String): Map<String, RawQuote> {
-    val out = mutableMapOf<String, RawQuote>()
-    val root = runCatching { ProviderJson.json.parseToJsonElement(body).jsonObject }.getOrNull() ?: return out
-    val items = (root["current"] as? JsonObject ?: root)
-    for ((symbol, payload) in items) {
-        if (symbol == "current") continue
-        val obj = runCatching { payload.jsonObject }.getOrNull() ?: continue
-        val priceText = obj["p"]?.jsonPrimitive?.contentOrNull ?: continue
-        val price = parseTgjuNumber(priceText) ?: continue
-        if (price.signum() <= 0) continue
-        val dpText = obj["dp"]?.jsonPrimitive?.contentOrNull
-        val changePercent = dpText?.let { parseTgjuNumber(it) }
-        val dText = obj["d"]?.jsonPrimitive?.contentOrNull
-        val changeAbs = dText?.let { parseTgjuNumber(it) }
-        out[symbol] = RawQuote(
-            price = price,
-            changePercent = changePercent,
-            changeAbs = changeAbs,
-        )
-    }
-    return out
-}
-
-/** TGJU numbers are strings like "58,000" or "-1.2" — commas stripped. */
-fun parseTgjuNumber(text: String): BigDecimal? {
-    val cleaned = text.replace(",", "").replace("٬", "").trim()
-    if (cleaned.isEmpty()) return null
-    return runCatching { BigDecimal(cleaned) }.getOrNull()
-}
+// The TGJU integration scrapes tgju.org HTML directly; all parsing lives in
+// provider/TgjuScraper.kt (Jsoup-based, pure and unit-tested). Number/date
+// helpers are also there (parseTgjuNumber, parseJalaliDate, …).
 
 /** Standard error type for provider-level exceptions. */
 class ProviderHttpException(

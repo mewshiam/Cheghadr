@@ -14,8 +14,11 @@
 - **Optional Top-movers overview** — biggest 24h gainers/losers among available
   assets, hidden by default, enable it from dashboard customization.
 - **Markets explorer** — category tabs (ارز، طلا، سکه، رمزارز، بورس، کالا),
-  pull-to-refresh, loading/empty/error/unavailable states per category,
-  honest "needs an authorized source" cards for TGJU-gated markets.
+  pull-to-refresh, loading/empty/error states per category.
+- **Iranian markets, live** — free-market USD/EUR/AED/TRY, gold (18k/24k
+  gram, mithqal), coins (Emami, Bahar Azadi, half, quarter, gerami), TEDPIX
+  and Brent, all scraped on-device from tgju.org with ~25-day real history
+  for profile-backed symbols.
 - **Universal search** — Persian + English names, tickers and aliases, with
   Persian text normalization (ی/ي، ک/ك، ZWNJ) and search history (clearable).
 - **Asset details** — quote with source + freshness, absolute/percentage
@@ -78,8 +81,7 @@
 | Backup *import* (restore) | deferred | export implemented in v1.1.0; import needs format-versioning UX |
 | Price-card **image** export | deferred (CSV + text share work) | needs canvas capture pipeline |
 | Provider comparison view | partial | provider health visible in Settings; side-by-side quote comparison not built |
-| OHLC/candlestick charts | deferred | no integrated source currently exposes genuine OHLC data |
-| Backend ingestion for TGJU | not built | requires authorization per TGJU terms; device-side opt-in endpoint instead |
+| OHLC/candlestick charts | deferred | tgju.org profile pages expose daily OHLC (parsed to closes); candlestick rendering is a future enhancement |
 | Instrumented/UI tests on emulator | not run in this environment | no emulator available here; unit + build verification executed (see TESTING.md) |
 
 ## Known limitations
@@ -88,7 +90,8 @@
   WorkManager execution (stated in the UI, not hidden).
 - CoinGecko is registered but serves no catalog assets in v1 (rate limits
   observed during verification); crypto defaults to CoinPaprika.
-- Brent oil and Tehran indices have no permissible keyless source and render
-  an honest unavailable state.
+- tgju.org history covers ~25 days per profile page; longer ranges fall back
+  to locally accumulated observations, and Brent oil (no profile page) is
+  spot-only. A refresh downloads ~1.5 MB of HTML (documented in Settings).
 - The gold calculator's retail estimate excludes market premium/bubble by
   design and says so in the UI.

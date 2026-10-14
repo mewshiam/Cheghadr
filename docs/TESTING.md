@@ -16,7 +16,7 @@
 |---|---|---|
 | core:model | AlertEvaluatorTest, PortfolioCalculatorTest | threshold crossings, cooldown suppression, re-arming, average cost, realized/unrealized P/L, partial sells |
 | core:common | JalaliCalendarTest, MoneyFormatterTest, PriceDisplayTest, FreshnessClassifierTest, DashboardConfigTest, CsvTest | calendar round-trips vs. known dates, digit localization/separators, toman conversion, price/change rendering, freshness thresholds, dashboard-config round-trip/repair semantics (garbage decode, dedupe, section restoration, featured cap), RFC 4180 CSV escaping incl. Persian text |
-| core:data | ProviderParsingTest, QuoteNormalizerTest | live-observed fixtures for every provider parser; validation rules (bad prices/changes/timestamps rejected) |
+| core:data | ProviderParsingTest, CoinPaprikaParsingTest, GoldApiParsingTest, TgjuScraperTest, QuoteNormalizerTest, AssetCatalogTest | **live-observed fixtures** for every provider parser incl. tgju.org HTML snippets (rows, sidebar, OHLC table, Persian digits, Jalali dates, high/low change sign, transient-parse robustness); validation rules (bad prices/changes/timestamps rejected); catalog invariants (unique ids, provider coverage, TGJU symbols match the live site) |
 | feature:converter | CurrencyConverterTest, GoldCalculatorTest | exact BigDecimal conversion chains (IRR cross-rates, crypto, inverse pairs), mithqal/ounce weights, purity conversion, coin specs |
 | app | QuietHoursTest | quiet-hours window logic incl. overnight windows |
 
